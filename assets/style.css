@@ -51,17 +51,15 @@ a { color: inherit; text-decoration: none; }
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  background: rgba(245,242,237,0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 0.5px solid var(--border);
+  background: transparent;
+  border-bottom: none;
 }
 
 .nav-logo {
   font-family: var(--serif);
   font-size: 15px;
   letter-spacing: 0.09em;
-  color: var(--dark);
+  color: var(--lilac);
 }
 .nav-logo a { color: inherit; }
 
@@ -150,13 +148,13 @@ a { color: inherit; text-decoration: none; }
 
 /* ─── LINKS ─── */
 .bio-link {
-  color: var(--moss);
-  border-bottom: 0.5px solid var(--sage);
+  color: var(--lilac);
+  border-bottom: 0.5px solid rgba(216,176,213,0.5);
   transition: color 0.2s, border-color 0.2s;
 }
 .bio-link:hover {
-  color: var(--olive);
-  border-bottom-color: var(--olive);
+  color: #fff;
+  border-bottom-color: rgba(255,255,255,0.5);
 }
 
 /* ─── FOOTER ─── */
