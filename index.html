@@ -96,6 +96,7 @@
     .drawer {
       width: fit-content !important;
       min-width: 0 !important;
+      height: fit-content !important;
       padding-left: 32px !important;
       padding-right: 40px !important;
     }
@@ -221,12 +222,15 @@
 
   </main>
 
-  <footer class="site-footer">
-    &copy; 2025 Lila Nazemian
-  </footer>
-
   <script>
     function openDrawer() {
+      // Spin the cosmos flower on click
+      var svg = document.querySelector('.menu-btn .btn-float svg');
+      if (svg) svg.animate([
+        { transform: 'rotateY(0deg)   rotateX(18deg)' },
+        { transform: 'rotateY(720deg) rotateX(18deg)' }
+      ], { duration: 600, easing: 'ease-in-out' });
+
       document.getElementById('drawer').classList.add('open');
       document.getElementById('overlay').classList.add('open');
     }
