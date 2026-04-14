@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music — Lila Nazemian</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    body { background: #1a1814; }
+
+    /* Nav adapts on music page */
+    .site-nav {
+      background: rgba(26,24,20,0.75);
+      border-bottom-color: rgba(189,191,169,0.12);
+    }
+    .nav-logo a { color: var(--greige); }
+    .bar-1 { background: var(--lilac); }
+    .bar-2 { background: var(--sage); }
+    .bar-3 { background: var(--olive); }
+
+    /* Drawer on music page */
+    .drawer {
+      background: #1a1814;
+      border-left-color: rgba(189,191,169,0.12);
+    }
+    .drawer nav a { color: var(--greige); border-bottom-color: rgba(189,191,169,0.12); }
+    .drawer nav a:hover { color: var(--sage); }
+    .drawer nav a.active { color: var(--lilac); }
+    .drawer-close { color: var(--olive); }
+
+    /* Full-bleed video hero */
+    .music-hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .music-hero video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+    }
+    .music-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(26,24,20,0.3) 0%, rgba(26,24,20,0.55) 100%);
+    }
+    .music-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 40px;
+      max-width: 600px;
+    }
+    .music-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 20px;
+    }
+    .music-title {
+      font-family: var(--serif);
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 400;
+      color: var(--greige);
+      line-height: 1.05;
+      margin-bottom: 28px;
+    }
+    .music-title em {
+      font-style: italic;
+      color: var(--lilac);
+    }
+    .music-body {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(189,191,169,0.85);
+      line-height: 1.85;
+    }
+    .music-body a.bio-link {
+      color: var(--sage);
+      border-bottom-color: rgba(160,192,95,0.4);
+    }
+    .music-body a.bio-link:hover {
+      color: var(--greige);
+      border-bottom-color: var(--greige);
+    }
+
+    .site-footer {
+      background: #1a1814;
+      color: rgba(189,191,169,0.35);
+      border-top-color: rgba(189,191,169,0.1);
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" onclick="closeDrawer()">&#10005; close</button>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="music.html" class="active">Music</a>
+    </nav>
+  </div>
+
+  <header class="site-nav">
+    <div class="nav-logo"><a href="index.html">Lila Nazemian</a></div>
+    <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
+    </button>
+  </header>
+
+  <main class="page" style="padding-top:0;">
+    <section class="music-hero">
+      <video autoplay muted loop playsinline>
+        <source src="assets/music_bg.webm" type="video/webm" />
+        <source src="assets/music_bg.mp4"  type="video/mp4" />
+      </video>
+      <div class="music-hero-overlay"></div>
+      <div class="music-content">
+        <div class="music-eyebrow">Music</div>
+        <h1 class="music-title">Lila &amp;<br><em>Salar</em></h1>
+        <p class="music-body">
+          Lila makes music with longtime collaborator,
+          <a class="bio-link" href="https://www.popr.world/" target="_blank" rel="noopener">Salar Ansari</a>.
+          Watch the
+          <a class="bio-link" href="https://www.youtube.com/watch?v=SYBYWYt3yhA" target="_blank" rel="noopener">Vasvase Music Video</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2025 Lila Nazemian
+  </footer>
+
+  <script>
+    function openDrawer() {
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+  </script>
+</body>
+</html>
