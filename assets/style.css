@@ -59,7 +59,10 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--serif);
   font-size: 15px;
   letter-spacing: 0.09em;
-  color: var(--lilac);
+  color: #f5f2ed;
+  background: rgba(90, 110, 70, 0.82);
+  padding: 6px 14px;
+  border-radius: 4px;
 }
 .nav-logo a { color: inherit; }
 
