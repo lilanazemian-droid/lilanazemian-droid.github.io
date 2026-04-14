@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lila Nazemian</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* ── Flowers video hero ── */
+    html, body {
+      background: transparent;
+    }
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.75;
+      z-index: -1;
+    }
+    .hero-overlay {
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(to top, rgba(245,242,237,0.92) 0%, rgba(245,242,237,0.3) 60%, transparent 100%);
+      padding: 80px 40px 60px;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(40px, 6vw, 68px);
+      font-weight: 400;
+      line-height: 1.0;
+      color: var(--dark);
+      margin-bottom: 14px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--moss);
+    }
+    .hero-sub {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+      max-width: 380px;
+    }
+    .scroll-cue {
+      text-align: center;
+      padding: 14px 0 20px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--greige);
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    /* ── Bio section ── */
+    .bio-section {
+      margin-left: 50%;
+      padding: 48px 40px 48px;
+      background: rgba(90, 110, 70, 0.5);
+      border-radius: 4px;
+    }
+    .bio-text {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--dark);
+    }
+    .bio-text p + p {
+      margin-top: 1.4em;
+    }
+
+    /* ── Drawer compact sizing ── */
+    .drawer {
+      width: fit-content !important;
+      min-width: 0 !important;
+      padding-left: 32px !important;
+      padding-right: 40px !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Drawer overlay -->
+  <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+
+  <!-- Side drawer -->
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" onclick="closeDrawer()">&#10005; close</button>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="music.html">Music</a>
+    </nav>
+  </div>
+
+  <!-- Nav -->
+  <header class="site-nav">
+    <div class="nav-logo"><a href="index.html">Lila Nazemian</a></div>
+    <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
+      <img src="paisley_btn.png" alt="Menu" style="width:38px;height:38px;object-fit:contain;display:block;" />
+    </button>
+  </header>
+
+  <main class="page">
+
+    <!-- Flowers video hero -->
+    <section class="hero">
+      <video autoplay muted loop playsinline>
+        <source src="assets/flowers_bg.webm" type="video/webm" />
+        <source src="assets/flowers_bg.mp4"  type="video/mp4" />
+      </video>
+      <div class="hero-overlay">
+        <div class="hero-eyebrow">Curator &amp; Programs Director</div>
+        <p class="hero-sub">Independent curator, educator, and writer based in New York.</p>
+      </div>
+    </section>
+    <div class="scroll-cue">&#8595; &nbsp; scroll</div>
+
+    <!-- Bio -->
+    <section class="bio-section">
+      <div class="bio-text">
+        <p>
+          Lila Nazemian (she/her) is an independent curator and the Programs Director at
+          <a class="bio-link" href="https://arteeast.org" target="_blank" rel="noopener">ArteEast</a>
+          in New York. In 2022, she joined the Brooklyn-based
+          <a class="bio-link" href="https://www.transmitter.nyc/" target="_blank" rel="noopener">Transmitter Gallery</a>
+          as a co-director where she has organized seven exhibitions. Her research and curatorial practice are focused on reimagining approaches to histories from the Middle East/Southwest Asia North Africa (SWANA) and Central Asia regions in an effort to counter narrative revisionism and collective amnesia. Recent curatorial projects include:
+          <a class="bio-link" href="https://cueartfoundation.org/the-bride-has-gone-to-pick-flowers" target="_blank" rel="noopener"><em>The Bride Has Gone To Pick Flowers</em></a>, Cue Art, New York (2025);
+          <a class="bio-link" href="https://www.arsenalcontemporary.com/ny/exhib/detail/conjuring-flames" target="_blank" rel="noopener"><em>Conjuring Flames</em></a>, Arsenal Contemporary, New York (2023);
+          <a class="bio-link" href="https://www.protocinema.org/exhibitions/now-that-we-have-established-a-common-ground" target="_blank" rel="noopener"><em>Now That We Have Established A Common Ground</em></a> within Protocinema's Emerging Curator Series (2022);
+          <a class="bio-link" href="https://www.protocinema.org/exhibitions/a-few-in-many-places-1" target="_blank" rel="noopener"><em>A Few In Many Places</em></a>, Protocinema, Governors Island New York (2021);
+          <a class="bio-link" href="https://centerforbookarts.org/exhibitions/i-open-my-eyes-and-see-myself-under-a-tree-laden-with-fruit-that-i-cannot-name" target="_blank" rel="noopener"><em>I open my eyes and see myself under a tree laden with fruit that I cannot name</em></a>, Center for Book Arts, New York (2020);
+          <em>On Echoes of Invisible Hearts: Image Making and Popular Archiving in Times of Unrest</em>, Station Beirut (2019);
+          <em>On Echoes of Invisible Hearts: Narratives of Yemeni Displacement</em>, Poetry Project, Berlin (2018);
+          and <em>Spheres of Influence</em>, Mohsen Gallery, Tehran (2016).
+        </p>
+        <p>
+          Nazemian teaches part-time at NYU Steinhardt's Department of Art &amp; Art Professions. She received a B.A. in History from Scripps College, California; and an M.A. in Near Eastern Studies from N.Y.U., New York. She is among the 2026 HueArts Leadership Cohort. In 2025, she took part in ACAF's
+          <a class="bio-link" href="https://www.acaforum.art/field-meeting-t7-landing" target="_blank" rel="noopener"><em>Field Meeting 7: Thinking Pilgrimage</em></a>.
+          She was a QAYYEM 2019 Curatorial Fellow, was among the inaugural participants of the 2018–2019 Interdisciplinary Art and Theory Program in New York and participated in ICI's
+          <a class="bio-link" href="https://curatorsintl.org/learning/14071-curatorial-intensive-bangkok-2018" target="_blank" rel="noopener"><em>2018 Curatorial Intensive in Bangkok</em></a>.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2025 Lila Nazemian
+  </footer>
+
+  <script>
+    function openDrawer() {
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+  </script>
+
+  <!-- Isfahan music box -->
+  <script>
+  (function () {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+
+    // Isfahan dastgah rooted on D4.
+    // The defining interval is the koron (neutral/half-flat) 3rd —
+    // 350 cents above the tonic, between F and F#.
+    var D4  = 293.66,
+        E4  = 329.63,
+        Fk4 = D4 * Math.pow(2, 350 / 1200),  // ≈ 359.7 Hz  (koron third)
+        G4  = 392.00,
+        A4  = 440.00,
+        Bb4 = 466.16;
+
+    // Monophonic melody — {f: Hz, d: ms}  |  f = 0 → rest
+    var mel = [
+      // phrase 1 — classic Isfahan descent: 5th → koron-3rd → tonic
+      {f:A4,  d:560}, {f:G4,  d:390}, {f:Fk4, d:760},
+      {f:E4,  d:390}, {f:D4,  d:1200},{f:0,   d:420},
+
+      // phrase 2 — rise through the scale, Bb colour note, back down
+      {f:D4,  d:280}, {f:E4,  d:280}, {f:Fk4, d:430},
+      {f:G4,  d:560}, {f:A4,  d:390}, {f:Bb4, d:610},
+      {f:A4,  d:390}, {f:G4,  d:390}, {f:Fk4, d:560},
+      {f:E4,  d:390}, {f:D4,  d:1500},{f:0,   d:500},
+
+      // phrase 3 — ornamental turn on koron-3rd, settle to tonic
+      {f:E4,  d:200}, {f:Fk4, d:250}, {f:E4,  d:200},
+      {f:D4,  d:250}, {f:E4,  d:200}, {f:Fk4, d:610},
+      {f:G4,  d:760}, {f:Fk4, d:430}, {f:E4,  d:390},
+      {f:D4,  d:2000},{f:0,   d:1200}
+    ];
+
+    var ctx, masterGain, nextTime = 0, idx = 0, ready = false;
+
+    // Synthetic reverb: exponentially decaying noise impulse
+    function makeReverb() {
+      var conv = ctx.createConvolver(),
+          n    = ctx.sampleRate * 3,
+          buf  = ctx.createBuffer(2, n, ctx.sampleRate);
+      for (var c = 0; c < 2; c++) {
+        var d = buf.getChannelData(c);
+        for (var i = 0; i < n; i++)
+          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2.1);
+      }
+      conv.buffer = buf;
+      return conv;
+    }
+
+    // Scheduler: look 2 s ahead so background-tab throttling never gaps
+    function tick() {
+      while (nextTime < ctx.currentTime + 2.0) {
+        var note = mel[idx], dur = note.d / 1000;
+
+        if (note.f > 0) {
+          var osc = ctx.createOscillator(),
+              ng  = ctx.createGain(),
+              rel = Math.min(0.5, dur * 0.44);
+
+          osc.type = 'sine';
+          osc.frequency.value = note.f;
+
+          ng.gain.setValueAtTime(0,   nextTime);
+          ng.gain.linearRampToValueAtTime(1, nextTime + 0.018);
+          ng.gain.setValueAtTime(1,   nextTime + dur - rel);
+          ng.gain.exponentialRampToValueAtTime(0.0001, nextTime + dur);
+
+          osc.connect(ng);
+          ng.connect(masterGain);
+          osc.start(nextTime);
+          osc.stop(nextTime + dur + 0.06);
+        }
+
+        nextTime += dur;
+        idx = (idx + 1) % mel.length;
+        if (idx === 0) nextTime += 2.5;   // breath between loops
+      }
+      setTimeout(tick, 80);
+    }
+
+    function setup() {
+      if (ready) return;
+      ready = true;
+
+      var rev = makeReverb(), rvg = ctx.createGain();
+      rvg.gain.value = 0.38;
+
+      masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0, ctx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 4); // 4 s fade-in
+
+      masterGain.connect(ctx.destination);
+      masterGain.connect(rev);
+      rev.connect(rvg);
+      rvg.connect(ctx.destination);
+
+      nextTime = ctx.currentTime + 0.5;
+      tick();
+    }
+
+    function start() {
+      if (!ctx) ctx = new AC();
+      ctx.resume().then(function () {
+        if (ctx.state === 'running') setup();
+      });
+    }
+
+    // Attempt autoplay; fall back to first user gesture (browser policy)
+    start();
+    ['click', 'touchstart', 'keydown'].forEach(function (ev) {
+      document.addEventListener(ev, start, { once: true, passive: true });
+    });
+  }());
+  </script>
+</body>
+</html>
