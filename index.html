@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lila Nazemian</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* ── Flowers video hero ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.75;
+    }
+    .hero-overlay {
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(to top, rgba(245,242,237,0.92) 0%, rgba(245,242,237,0.3) 60%, transparent 100%);
+      padding: 80px 40px 60px;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(40px, 6vw, 68px);
+      font-weight: 400;
+      line-height: 1.0;
+      color: var(--dark);
+      margin-bottom: 14px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--moss);
+    }
+    .hero-sub {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+      max-width: 380px;
+    }
+    .scroll-cue {
+      text-align: center;
+      padding: 14px 0 20px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--greige);
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    /* ── Bio section ── */
+    .bio-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 72px 40px 40px;
+    }
+    .bio-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--greige);
+      margin-bottom: 28px;
+    }
+    .bio-text {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--dark);
+    }
+    .bio-text p + p {
+      margin-top: 1.4em;
+    }
+
+    /* ── Nav links ── */
+    .page-nav {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      padding: 48px 40px 0;
+      border-top: 0.5px solid var(--border);
+      margin: 60px 40px 0;
+    }
+    .page-nav a {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--mid);
+      border-bottom: 0.5px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      padding-bottom: 2px;
+    }
+    .page-nav a:hover {
+      color: var(--moss);
+      border-bottom-color: var(--sage);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Drawer overlay -->
+  <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+
+  <!-- Side drawer -->
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" onclick="closeDrawer()">&#10005; close</button>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="music.html">Music</a>
+    </nav>
+  </div>
+
+  <!-- Nav -->
+  <header class="site-nav">
+    <div class="nav-logo"><a href="index.html">Lila Nazemian</a></div>
+    <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
+    </button>
+  </header>
+
+  <main class="page">
+
+    <!-- Flowers video hero -->
+    <section class="hero">
+      <video autoplay muted loop playsinline>
+        <source src="assets/flowers_bg.webm" type="video/webm" />
+        <source src="assets/flowers_bg.mp4"  type="video/mp4" />
+      </video>
+      <div class="hero-overlay">
+        <div class="hero-eyebrow">Curator &amp; Programs Director</div>
+        <h1 class="hero-title">Lila<br><em>Nazemian</em></h1>
+        <p class="hero-sub">Independent curator, educator, and writer based in New York.</p>
+      </div>
+    </section>
+    <div class="scroll-cue">&#8595; &nbsp; scroll</div>
+
+    <!-- Bio -->
+    <section class="bio-section">
+      <div class="bio-label">Bio</div>
+      <div class="bio-text">
+        <p>
+          Lila Nazemian (she/her) is an independent curator and the Programs Director at
+          <a class="bio-link" href="https://arteeast.org" target="_blank" rel="noopener">ArteEast</a>
+          in New York. In 2022, she joined the Brooklyn-based
+          <a class="bio-link" href="https://www.transmitter.nyc/" target="_blank" rel="noopener">Transmitter Gallery</a>
+          as a co-director where she has organized seven exhibitions. Her research and curatorial practice are focused on reimagining approaches to histories from the Middle East/Southwest Asia North Africa (SWANA) and Central Asia regions in an effort to counter narrative revisionism and collective amnesia. Recent curatorial projects include:
+          <a class="bio-link" href="https://cueartfoundation.org/the-bride-has-gone-to-pick-flowers" target="_blank" rel="noopener"><em>The Bride Has Gone To Pick Flowers</em></a>, Cue Art, New York (2025);
+          <a class="bio-link" href="https://www.arsenalcontemporary.com/ny/exhib/detail/conjuring-flames" target="_blank" rel="noopener"><em>Conjuring Flames</em></a>, Arsenal Contemporary, New York (2023);
+          <a class="bio-link" href="https://www.protocinema.org/exhibitions/now-that-we-have-established-a-common-ground" target="_blank" rel="noopener"><em>Now That We Have Established A Common Ground</em></a> within Protocinema's Emerging Curator Series (2022);
+          <a class="bio-link" href="https://www.protocinema.org/exhibitions/a-few-in-many-places-1" target="_blank" rel="noopener"><em>A Few In Many Places</em></a>, Protocinema, Governors Island New York (2021);
+          <a class="bio-link" href="https://centerforbookarts.org/exhibitions/i-open-my-eyes-and-see-myself-under-a-tree-laden-with-fruit-that-i-cannot-name" target="_blank" rel="noopener"><em>I open my eyes and see myself under a tree laden with fruit that I cannot name</em></a>, Center for Book Arts, New York (2020);
+          <em>On Echoes of Invisible Hearts: Image Making and Popular Archiving in Times of Unrest</em>, Station Beirut (2019);
+          <em>On Echoes of Invisible Hearts: Narratives of Yemeni Displacement</em>, Poetry Project, Berlin (2018);
+          and <em>Spheres of Influence</em>, Mohsen Gallery, Tehran (2016).
+        </p>
+        <p>
+          Nazemian teaches part-time at NYU Steinhardt's Department of Art &amp; Art Professions. She received a B.A. in History from Scripps College, California; and an M.A. in Near Eastern Studies from N.Y.U., New York. She is among the 2026 HueArts Leadership Cohort. In 2025, she took part in ACAF's
+          <a class="bio-link" href="https://www.acaforum.art/field-meeting-t7-landing" target="_blank" rel="noopener"><em>Field Meeting 7: Thinking Pilgrimage</em></a>.
+          She was a QAYYEM 2019 Curatorial Fellow, was among the inaugural participants of the 2018–2019 Interdisciplinary Art and Theory Program in New York and participated in ICI's
+          <a class="bio-link" href="https://curatorsintl.org/learning/14071-curatorial-intensive-bangkok-2018" target="_blank" rel="noopener"><em>2018 Curatorial Intensive in Bangkok</em></a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Cross-page nav -->
+    <nav class="page-nav">
+      <a href="catalogue.html">Catalogue</a>
+      <a href="music.html">Music</a>
+    </nav>
+
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2025 Lila Nazemian
+  </footer>
+
+  <script>
+    function openDrawer() {
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+  </script>
+</body>
+</html>
