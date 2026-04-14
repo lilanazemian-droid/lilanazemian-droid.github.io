@@ -93,6 +93,39 @@
       padding-left: 32px !important;
       padding-right: 40px !important;
     }
+
+    /* ── Floating spinning menu button ── */
+    .menu-btn {
+      position: fixed !important;
+      top: 24px;
+      right: 24px;
+      z-index: 1000;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      cursor: pointer;
+      padding: 0;
+    }
+    .btn-float {
+      perspective: 320px;
+      animation: btnBob 3.6s ease-in-out infinite;
+    }
+    .btn-float img {
+      display: block;
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      animation: btnSpin 9s linear infinite;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
+    }
+    @keyframes btnBob {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-14px); }
+    }
+    @keyframes btnSpin {
+      from { transform: rotateY(0deg); }
+      to   { transform: rotateY(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -113,10 +146,14 @@
   <!-- Nav -->
   <header class="site-nav">
     <div class="nav-logo"><a href="index.html">Lila Nazemian</a></div>
-    <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
-      <img src="paisley_btn.png" alt="Menu" style="width:76px;height:76px;object-fit:contain;display:block;" />
-    </button>
   </header>
+
+  <!-- Floating menu button -->
+  <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
+    <div class="btn-float">
+      <img src="paisley_btn.png" alt="Menu" />
+    </div>
+  </button>
 
   <main class="page">
 
