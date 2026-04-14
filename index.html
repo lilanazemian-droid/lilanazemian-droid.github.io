@@ -214,6 +214,17 @@
       {f:D4,  d:2000},{f:0,   d:1200}
     ];
 
+    // Music box tine synthesis:
+    // A real tine produces inharmonic overtones (Euler-Bernoulli beam).
+    // Each partial has its own decay — the bright overtones vanish fast,
+    // leaving just the warm fundamental. That contrast IS the music box sound.
+    // [frequency multiplier, peak amplitude, decay time in seconds]
+    var PARTIALS = [
+      [1.000, 1.00, 2.4],   // fundamental — long, warm decay
+      [2.756, 0.32, 0.50],  // 1st inharmonic overtone — the "ting", fades fast
+      [5.404, 0.10, 0.18],  // 2nd overtone — very short, adds initial brightness
+    ];
+
     var ctx, masterGain, nextTime = 0, idx = 0, ready = false;
 
     // Synthetic reverb: exponentially decaying noise impulse
@@ -230,29 +241,33 @@
       return conv;
     }
 
+    // Strike a single tine: sum of inharmonic partials, each decaying independently
+    function strikeTine(freq, startTime) {
+      PARTIALS.forEach(function(p) {
+        var mult = p[0], amp = p[1], decay = p[2];
+        var osc = ctx.createOscillator();
+        var ng  = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.value = freq * mult;
+
+        ng.gain.setValueAtTime(0, startTime);
+        ng.gain.linearRampToValueAtTime(amp, startTime + 0.003); // 3 ms attack (instant ping)
+        ng.gain.exponentialRampToValueAtTime(0.0001, startTime + decay);
+
+        osc.connect(ng);
+        ng.connect(masterGain);
+        osc.start(startTime);
+        osc.stop(startTime + decay + 0.05);
+      });
+    }
+
     // Scheduler: look 2 s ahead so background-tab throttling never gaps
     function tick() {
       while (nextTime < ctx.currentTime + 2.0) {
         var note = mel[idx], dur = note.d / 1000;
 
-        if (note.f > 0) {
-          var osc = ctx.createOscillator(),
-              ng  = ctx.createGain(),
-              rel = Math.min(0.5, dur * 0.44);
-
-          osc.type = 'sine';
-          osc.frequency.value = note.f;
-
-          ng.gain.setValueAtTime(0,   nextTime);
-          ng.gain.linearRampToValueAtTime(1, nextTime + 0.018);
-          ng.gain.setValueAtTime(1,   nextTime + dur - rel);
-          ng.gain.exponentialRampToValueAtTime(0.0001, nextTime + dur);
-
-          osc.connect(ng);
-          ng.connect(masterGain);
-          osc.start(nextTime);
-          osc.stop(nextTime + dur + 0.06);
-        }
+        if (note.f > 0) strikeTine(note.f, nextTime);
 
         nextTime += dur;
         idx = (idx + 1) % mel.length;
@@ -266,11 +281,11 @@
       ready = true;
 
       var rev = makeReverb(), rvg = ctx.createGain();
-      rvg.gain.value = 0.38;
+      rvg.gain.value = 0.48;  // generous reverb for the dreamy tail
 
       masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0, ctx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 4); // 4 s fade-in
+      masterGain.gain.linearRampToValueAtTime(0.38, ctx.currentTime + 4); // 4 s fade-in
 
       masterGain.connect(ctx.destination);
       masterGain.connect(rev);
