@@ -168,6 +168,31 @@
       opacity: 1 !important;
       pointer-events: auto !important;
     }
+
+    /* ── Mobile: bio fills full width ── */
+    @media (max-width: 768px) {
+      .bio-section {
+        margin-right: 0 !important;
+        border-radius: 0 !important;
+        padding: 32px 24px 40px !important;
+      }
+      .nav-logo {
+        width: 100% !important;
+      }
+      /* Button moves to top-right corner of nav */
+      .menu-btn {
+        top: 32px !important;
+        left: auto !important;
+        right: 14px !important;
+        transform: none !important;
+      }
+      /* Drawer drops below the top-right button */
+      .drawer {
+        left: auto !important;
+        right: 12px !important;
+        top: 110px !important;
+      }
+    }
   </style>
 </head>
 <body>
