@@ -343,6 +343,41 @@
     ['click', 'touchstart', 'keydown'].forEach(function (ev) {
       document.addEventListener(ev, start, { once: true, passive: true });
     });
+
+    // ── Scroll splurge ──
+    // On each scroll, fire a short nature-inspired burst of music-box notes
+    // drawn from the upper Isfahan octave (bird calls, water drops, rustles).
+    var D5  = D4 * 2,  E5  = E4 * 2,
+        Fk5 = Fk4 * 2, G5  = G4 * 2,
+        A5  = A4 * 2,  Bb5 = Bb4 * 2;
+
+    // Each pattern: [[frequency, delay_ms], ...]
+    var splurges = [
+      [[A5, 0],   [G5, 80],  [Fk5, 170]],                    // descending bird call
+      [[D5, 0],   [Fk5, 70], [A5,  150]],                    // rising chirp
+      [[G5, 0],   [E5, 65],  [Fk5, 130], [D5,  220]],        // water drips
+      [[Fk5, 0],  [E5, 55],  [Fk5, 110], [G5,  190]],        // trill
+      [[A5, 0],   [G5, 90],  [E5,  190]],                    // falling droplets
+      [[E5, 0],   [Fk5, 60], [G5,  120], [A5,  200]],        // rustling ascent
+      [[Bb5, 0],  [A5, 75],  [G5,  160]],                    // bright cascade
+      [[D5, 0],   [E5, 50],  [Fk5,  95], [E5,  150]],        // flutter
+    ];
+
+    var scrollBusy = false;
+    window.addEventListener('scroll', function () {
+      if (scrollBusy || !ready || !ctx) return;
+      scrollBusy = true;
+      setTimeout(function () { scrollBusy = false; }, 380);
+
+      var pattern = splurges[Math.floor(Math.random() * splurges.length)];
+      var now     = ctx.currentTime;
+      // Tiny random pitch nudge (±12 cents) so repeated triggers feel organic
+      var bend    = Math.pow(2, (Math.random() * 24 - 12) / 1200);
+
+      pattern.forEach(function (n) {
+        strikeTine(n[0] * bend, now + n[1] / 1000);
+      });
+    }, { passive: true });
   }());
   </script>
 </body>
