@@ -33,7 +33,7 @@
       padding-right: 40px !important;
     }
 
-    /* ── Floating spinning menu button ── */
+    /* ── Floating menu button ── */
     .menu-btn {
       position: fixed !important;
       top: 24px;
@@ -46,22 +46,18 @@
       padding: 0;
     }
     .btn-float {
-      perspective: 350px;
-      animation: btnBob 3.6s ease-in-out infinite;
+      animation: btnBob 4s ease-in-out infinite;
     }
     .btn-float svg {
       display: block;
-      animation: btnSpin 9s linear infinite;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,0.45));
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.38));
     }
     @keyframes btnBob {
       0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-14px); }
+      50%       { transform: translateY(-10px); }
     }
-    @keyframes btnSpin {
-      from { transform: rotateY(0deg)   rotateX(18deg); }
-      to   { transform: rotateY(360deg) rotateX(18deg); }
-    }
+    @keyframes btnSpinCW  { from { transform: rotate(0deg);   } to { transform: rotate(360deg);  } }
+    @keyframes btnSpinCCW { from { transform: rotate(0deg);   } to { transform: rotate(-360deg); } }
 
     .catalogue-grid {
       display: grid;
@@ -127,7 +123,6 @@
 
   <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer">
-    <button class="drawer-close" onclick="closeDrawer()">&#10005; close</button>
     <nav>
       <a href="index.html">Home</a>
       <a href="catalogue.html" class="active">Catalogue</a>
@@ -140,9 +135,9 @@
   </header>
 
   <!-- Floating cosmos menu button -->
-  <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
+  <button class="menu-btn" onclick="toggleDrawer()" aria-label="Open/close menu">
     <div class="btn-float">
-      <svg viewBox="-24 -24 48 48" width="72" height="72" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="-24 -24 48 48" width="108" height="108" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="cp2" cx="38%" cy="28%"><stop offset="0%" stop-color="#f0dcea"/><stop offset="100%" stop-color="#b060b0"/></radialGradient>
           <radialGradient id="ci2" cx="38%" cy="28%"><stop offset="0%" stop-color="#e8cce4"/><stop offset="100%" stop-color="#c090c4"/></radialGradient>
@@ -252,12 +247,24 @@
   </main>
 
   <script>
-    function openDrawer() {
+    var _cosmosDir = Math.random() < 0.5 ? 'btnSpinCW' : 'btnSpinCCW';
+    (function () {
       var svg = document.querySelector('.menu-btn .btn-float svg');
-      if (svg) svg.animate([
-        { transform: 'rotateY(0deg)   rotateX(18deg)' },
-        { transform: 'rotateY(720deg) rotateX(18deg)' }
-      ], { duration: 600, easing: 'ease-in-out' });
+      if (svg) svg.style.animation = _cosmosDir + ' 11s linear infinite';
+    }());
+
+    function _spinBtn() {
+      var svg = document.querySelector('.menu-btn .btn-float svg');
+      if (!svg) return;
+      svg.style.animation = 'none';
+      var deg = _cosmosDir === 'btnSpinCW' ? '1440deg' : '-1440deg';
+      svg.animate(
+        [{ transform: 'rotate(0deg)' }, { transform: 'rotate(' + deg + ')' }],
+        { duration: 700, easing: 'ease-out' }
+      ).onfinish = function () { svg.style.animation = _cosmosDir + ' 11s linear infinite'; };
+    }
+
+    function openDrawer() {
       document.getElementById('drawer').classList.add('open');
       document.getElementById('overlay').classList.add('open');
     }
@@ -265,7 +272,15 @@
       document.getElementById('drawer').classList.remove('open');
       document.getElementById('overlay').classList.remove('open');
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+    function toggleDrawer() {
+      _spinBtn();
+      if (document.getElementById('drawer').classList.contains('open')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    }
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
   </script>
 </body>
 </html>

@@ -80,7 +80,7 @@
       margin-right: 50%;
       padding: 48px 40px 48px;
       background: rgba(90, 110, 70, 0.82);
-      border-radius: 4px;
+      border-radius: 0 0 6px 0;   /* flush top — connects to nav box */
     }
     .bio-text {
       font-size: 15px;
@@ -101,11 +101,12 @@
       padding-right: 40px !important;
     }
 
-    /* ── Floating spinning menu button ── */
+    /* ── Floating menu button — sits on the top-right corner of the bio box ── */
     .menu-btn {
       position: fixed !important;
-      top: 24px;
-      right: 24px;
+      top: 64px;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: 1000;
       background: none !important;
       border: none !important;
@@ -114,21 +115,34 @@
       padding: 0;
     }
     .btn-float {
-      perspective: 350px;
-      animation: btnBob 3.6s ease-in-out infinite;
+      animation: btnBob 4s ease-in-out infinite;
     }
     .btn-float svg {
       display: block;
-      animation: btnSpin 9s linear infinite;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,0.45));
+      /* rotation direction assigned randomly by JS */
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.38));
     }
     @keyframes btnBob {
       0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-14px); }
+      50%       { transform: translateY(-10px); }
     }
-    @keyframes btnSpin {
-      from { transform: rotateY(0deg)   rotateX(18deg); }
-      to   { transform: rotateY(360deg) rotateX(18deg); }
+    @keyframes btnSpinCW  { from { transform: rotate(0deg);    } to { transform: rotate(360deg);  } }
+    @keyframes btnSpinCCW { from { transform: rotate(0deg);    } to { transform: rotate(-360deg); } }
+
+    /* ── Nav + bio: one continuous green block from the top-left ── */
+    .site-nav {
+      padding: 0 !important;
+      height: 64px;
+      align-items: stretch !important;
+    }
+    .nav-logo {
+      width: 50% !important;
+      height: 100% !important;
+      background: rgba(90,110,70,0.82) !important;
+      border-radius: 0 !important;
+      padding: 0 40px !important;
+      display: flex !important;
+      align-items: center;
     }
   </style>
 </head>
@@ -139,7 +153,6 @@
 
   <!-- Side drawer -->
   <div class="drawer" id="drawer">
-    <button class="drawer-close" onclick="closeDrawer()">&#10005; close</button>
     <nav>
       <a href="index.html" class="active">Home</a>
       <a href="catalogue.html">Catalogue</a>
@@ -153,9 +166,9 @@
   </header>
 
   <!-- Floating cosmos menu button -->
-  <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
+  <button class="menu-btn" onclick="toggleDrawer()" aria-label="Open/close menu">
     <div class="btn-float">
-      <svg viewBox="-24 -24 48 48" width="72" height="72" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="-24 -24 48 48" width="108" height="108" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="cp" cx="38%" cy="28%"><stop offset="0%" stop-color="#f0dcea"/><stop offset="100%" stop-color="#b060b0"/></radialGradient>
           <radialGradient id="ci" cx="38%" cy="28%"><stop offset="0%" stop-color="#e8cce4"/><stop offset="100%" stop-color="#c090c4"/></radialGradient>
@@ -223,14 +236,25 @@
   </main>
 
   <script>
-    function openDrawer() {
-      // Spin the cosmos flower on click
+    // Random slow rotation direction picked on each page load
+    var _cosmosDir = Math.random() < 0.5 ? 'btnSpinCW' : 'btnSpinCCW';
+    (function () {
       var svg = document.querySelector('.menu-btn .btn-float svg');
-      if (svg) svg.animate([
-        { transform: 'rotateY(0deg)   rotateX(18deg)' },
-        { transform: 'rotateY(720deg) rotateX(18deg)' }
-      ], { duration: 600, easing: 'ease-in-out' });
+      if (svg) svg.style.animation = _cosmosDir + ' 11s linear infinite';
+    }());
 
+    function _spinBtn() {
+      var svg = document.querySelector('.menu-btn .btn-float svg');
+      if (!svg) return;
+      svg.style.animation = 'none';
+      var deg = _cosmosDir === 'btnSpinCW' ? '1440deg' : '-1440deg';
+      svg.animate(
+        [{ transform: 'rotate(0deg)' }, { transform: 'rotate(' + deg + ')' }],
+        { duration: 700, easing: 'ease-out' }
+      ).onfinish = function () { svg.style.animation = _cosmosDir + ' 11s linear infinite'; };
+    }
+
+    function openDrawer() {
       document.getElementById('drawer').classList.add('open');
       document.getElementById('overlay').classList.add('open');
     }
@@ -238,53 +262,62 @@
       document.getElementById('drawer').classList.remove('open');
       document.getElementById('overlay').classList.remove('open');
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+    function toggleDrawer() {
+      _spinBtn();
+      if (document.getElementById('drawer').classList.contains('open')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    }
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
   </script>
 
-  <!-- Cosmos snow — uses the real cosmos PNG from assets -->
+  <!-- Cosmos snow — inline SVG petals, no external file dependency -->
   <script>
   (function () {
-    // CSS filters to vary colour across falling flowers
-    // Base image is green; filters shift it toward lilac, pink, cream, etc.
-    var filters = [
-      'none',
-      'hue-rotate(270deg) brightness(1.3)',   // lilac
-      'hue-rotate(290deg) brightness(1.15)',  // soft pink-purple
-      'brightness(1.6) opacity(0.85)',        // pale green
-      'hue-rotate(255deg) brightness(1.2)',   // lavender
-      'sepia(0.3) brightness(1.4)',           // warm cream-green
-    ];
+    var COLORS = ['#d8b0d5','#c090c4','#e0c8de','#b860b0','#f0dcea','#f5f2ed','#cda8ca'];
     var N = 24;
 
     var wrap = document.createElement('div');
     wrap.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden;';
     document.body.appendChild(wrap);
 
+    function flowerSVG(sz, fill) {
+      var p8  = [0,45,90,135,180,225,270,315];
+      var p16 = [22.5,67.5,112.5,157.5,202.5,247.5,292.5,337.5];
+      var s = '<svg viewBox="-24 -24 48 48" width="'+sz+'" height="'+sz+'" xmlns="http://www.w3.org/2000/svg">';
+      p8.forEach(function(r){
+        s += '<path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="'+fill+'" transform="rotate('+r+')"/>';
+      });
+      p16.forEach(function(r){
+        s += '<path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="'+fill+'" opacity="0.72" transform="rotate('+r+')"/>';
+      });
+      s += '<circle r="5" fill="#f5d060" opacity="0.85"/></svg>';
+      return s;
+    }
+
     for (var i = 0; i < N; i++) spawn();
 
     function spawn() {
-      var size   = 22 + Math.random() * 32;          // 22–54 px
-      var x      = Math.random() * 106 - 3;
-      var dur    = 50000 + Math.random() * 45000;    // 50–95 s
-      var delay  = -Math.random() * dur;
-      var filt   = filters[Math.floor(Math.random() * filters.length)];
-      var drift  = (Math.random() - 0.5) * 180;
-      var spin   = (Math.random() - 0.5) * 600;
+      var size  = 22 + Math.random() * 32;
+      var x     = Math.random() * 106 - 3;
+      var dur   = 50000 + Math.random() * 45000;
+      // Pre-scatter: all flowers start mid-fall, none fade in from zero
+      var delay = -(0.12 + Math.random() * 0.88) * dur;
+      var fill  = COLORS[Math.floor(Math.random() * COLORS.length)];
+      var drift = (Math.random() - 0.5) * 180;
+      var spin  = (Math.random() - 0.5) * 600;
+      var opk   = 0.55 + Math.random() * 0.3;   // varied max opacity
 
       var el = document.createElement('div');
       el.style.cssText = 'position:absolute;top:0;left:' + x + '%;';
-      el.innerHTML = '<img src="assets/cosmos-flower-clipart-lg.png"'
-                   + ' width="' + Math.round(size) + '" height="' + Math.round(size) + '"'
-                   + ' style="display:block;filter:' + filt + '" />';
+      el.innerHTML = flowerSVG(Math.round(size), fill);
       wrap.appendChild(el);
 
       el.animate([
-        { transform: 'translateY(-' + (size + 10) + 'px) translateX(0px) rotate(0deg)',
-          opacity: 0 },
-        { transform: 'translateY(5vh) translateX(' + (drift * 0.07) + 'px) rotate(' + (spin * 0.07) + 'deg)',
-          opacity: 0.7, offset: 0.07 },
-        { transform: 'translateY(110vh) translateX(' + drift + 'px) rotate(' + spin + 'deg)',
-          opacity: 0 }
+        { transform: 'translateY(-'+(size+10)+'px) translateX(0px) rotate(0deg)',     opacity: opk },
+        { transform: 'translateY(110vh) translateX('+drift+'px) rotate('+spin+'deg)', opacity: 0   }
       ], { duration: dur, delay: delay, iterations: Infinity, easing: 'linear' });
     }
   }());
@@ -296,15 +329,14 @@
     var AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
 
-    // Isfahan dastgah rooted on D4.
-    // The defining interval is the koron (neutral/half-flat) 3rd —
-    // 350 cents above the tonic, between F and F#.
-    var D4  = 293.66,
-        E4  = 329.63,
-        Fk4 = D4 * Math.pow(2, 350 / 1200),  // ≈ 359.7 Hz  (koron third)
-        G4  = 392.00,
-        A4  = 440.00,
-        Bb4 = 466.16;
+    // Isfahan dastgah rooted on D5 (one octave higher — lighter, more ethereal).
+    // The defining interval is the koron (neutral/half-flat) 3rd.
+    var D4  = 587.33,   // D5
+        E4  = 659.26,   // E5
+        Fk4 = D4 * Math.pow(2, 350 / 1200),  // ≈ 719 Hz  (koron third)
+        G4  = 784.00,   // G5
+        A4  = 880.00,   // A5
+        Bb4 = 932.33;   // Bb5
 
     // Monophonic melody — {f: Hz, d: ms}  |  f = 0 → rest
     var mel = [
@@ -338,7 +370,7 @@
 
     var ctx, masterGain, nextTime = 0, idx = 0, ready = false;
 
-    // Synthetic reverb: exponentially decaying noise impulse
+    // Short reverb (used for wind)
     function makeReverb() {
       var conv = ctx.createConvolver(),
           n    = ctx.sampleRate * 3,
@@ -347,6 +379,24 @@
         var d = buf.getChannelData(c);
         for (var i = 0; i < n; i++)
           d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2.1);
+      }
+      conv.buffer = buf;
+      return conv;
+    }
+
+    // Hall reverb for melody: 5 s decay, 22 ms pre-delay, gentle slope
+    function makeHallReverb() {
+      var conv = ctx.createConvolver(),
+          n    = ctx.sampleRate * 5,
+          buf  = ctx.createBuffer(2, n, ctx.sampleRate);
+      var pre = Math.floor(ctx.sampleRate * 0.022);
+      for (var c = 0; c < 2; c++) {
+        var d = buf.getChannelData(c);
+        for (var i = 0; i < n; i++) {
+          if (i < pre) { d[i] = 0; continue; }
+          var t = (i - pre) / (n - pre);
+          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 1.2);
+        }
       }
       conv.buffer = buf;
       return conv;
@@ -388,8 +438,9 @@
     }
 
     function startWind() {
-      // Gentle melancholic wind: band-pass filtered noise with slow LFOs
-      var len = ctx.sampleRate * 6;
+      // Wind: broad lowpass-shaped noise (no narrow bandpass = no water resonance).
+      // Key: low Q filters keep the spectrum diffuse; very slow LFOs for natural swell.
+      var len = ctx.sampleRate * 8;
       var buf = ctx.createBuffer(2, len, ctx.sampleRate);
       for (var c = 0; c < 2; c++) {
         var d = buf.getChannelData(c);
@@ -398,36 +449,34 @@
       var noise = ctx.createBufferSource();
       noise.buffer = buf; noise.loop = true;
 
-      // Low, mournful band — like wind through a window
-      var bpLow = ctx.createBiquadFilter();
-      bpLow.type = 'bandpass'; bpLow.frequency.value = 210; bpLow.Q.value = 0.7;
+      // Remove sub-bass thud
+      var hp = ctx.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 80; hp.Q.value = 0.4;
 
-      // Faint high whisper layer
-      var bpHigh = ctx.createBiquadFilter();
-      bpHigh.type = 'bandpass'; bpHigh.frequency.value = 1400; bpHigh.Q.value = 0.5;
+      // Cut harsh highs — broad, gentle slope
+      var lp = ctx.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 650; lp.Q.value = 0.5;
 
       var wGain = ctx.createGain();
       wGain.gain.setValueAtTime(0, ctx.currentTime);
-      wGain.gain.linearRampToValueAtTime(0.055, ctx.currentTime + 14); // breathes in slowly
+      wGain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 2.5);
 
-      var wRevConv = makeReverb();
-      var wRevG    = ctx.createGain(); wRevG.gain.value = 0.55;
-
-      noise.connect(bpLow);  bpLow.connect(wGain);
-      noise.connect(bpHigh); bpHigh.connect(wGain);
-      wGain.connect(ctx.destination);
-      wGain.connect(wRevConv); wRevConv.connect(wRevG); wRevG.connect(ctx.destination);
-
-      // Slow amplitude breath (one inhale/exhale every ~28 s)
+      // Very slow breath swell (one cycle every ~20 s)
       var aLFO = ctx.createOscillator(), aLFOG = ctx.createGain();
-      aLFO.frequency.value = 0.036; aLFOG.gain.value = 0.022;
+      aLFO.frequency.value = 0.05; aLFOG.gain.value = 0.018;
       aLFO.connect(aLFOG); aLFOG.connect(wGain.gain); aLFO.start();
 
-      // Slow filter sweep — wind shifting in pitch
+      // Slowly drifting lowpass cutoff — wind character shifts (~40 s cycle)
       var fLFO = ctx.createOscillator(), fLFOG = ctx.createGain();
-      fLFO.frequency.value = 0.055; fLFOG.gain.value = 70;
-      fLFO.connect(fLFOG); fLFOG.connect(bpLow.frequency); fLFO.start();
+      fLFO.frequency.value = 0.024; fLFOG.gain.value = 180;
+      fLFO.connect(fLFOG); fLFOG.connect(lp.frequency); fLFO.start();
 
+      var wRevConv = makeReverb();
+      var wRevG    = ctx.createGain(); wRevG.gain.value = 0.85;
+
+      noise.connect(hp); hp.connect(lp); lp.connect(wGain);
+      wGain.connect(ctx.destination);
+      wGain.connect(wRevConv); wRevConv.connect(wRevG); wRevG.connect(ctx.destination);
       noise.start();
     }
 
@@ -435,12 +484,12 @@
       if (ready) return;
       ready = true;
 
-      var rev = makeReverb(), rvg = ctx.createGain();
-      rvg.gain.value = 0.48;  // generous reverb for the dreamy tail
+      var rev = makeHallReverb(), rvg = ctx.createGain();
+      rvg.gain.value = 0.54;  // hall reverb — spacious tail
 
       masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0, ctx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(0.38, ctx.currentTime + 4); // 4 s fade-in
+      masterGain.gain.linearRampToValueAtTime(0.36, ctx.currentTime + 0.8); // fast fade-in
 
       masterGain.connect(ctx.destination);
       masterGain.connect(rev);
