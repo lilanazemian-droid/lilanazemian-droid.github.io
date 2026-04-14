@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalogue — Lila Nazemian</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .catalogue-header {
+      padding: 72px 40px 48px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .catalogue-header h1 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 400;
+      color: var(--dark);
+      line-height: 1.05;
+    }
+    .catalogue-header h1 em { font-style: italic; color: var(--moss); }
+    .catalogue-header p {
+      font-size: 13px;
+      color: var(--mid);
+      margin-top: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .catalogue-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 36px;
+      padding: 52px 40px 80px;
+    }
+
+    .catalogue-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+    .catalogue-card:hover .card-img img { transform: scale(1.03); }
+    .catalogue-card:hover .card-title { color: var(--moss); }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border-radius: 4px;
+      background: var(--greige);
+    }
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .card-info { padding: 14px 0 0; }
+    .card-year {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--greige);
+      margin-bottom: 5px;
+    }
+    .card-title {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--dark);
+      transition: color 0.2s;
+      margin-bottom: 4px;
+    }
+    .card-venue { font-size: 12px; color: var(--mid); line-height: 1.5; }
+    .card-pdf {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--olive);
+      border-bottom: 0.5px solid var(--sage);
+      padding-bottom: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" onclick="closeDrawer()">&#10005; close</button>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="catalogue.html" class="active">Catalogue</a>
+      <a href="music.html">Music</a>
+    </nav>
+  </div>
+
+  <header class="site-nav">
+    <div class="nav-logo"><a href="index.html">Lila Nazemian</a></div>
+    <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
+    </button>
+  </header>
+
+  <main class="page">
+    <div class="catalogue-header">
+      <h1>Curatorial<br><em>Catalogue</em></h1>
+      <p>Selected exhibitions and projects, 2016–2025</p>
+    </div>
+
+    <div class="catalogue-grid">
+
+      <a class="catalogue-card" href="catalogues/bride-has-gone.pdf" target="_blank" rel="noopener">
+        <div class="card-img">
+          <img src="assets/catalogues/cat_2025_bride.jpg" alt="The Bride Has Gone To Pick Flowers" loading="lazy" />
+        </div>
+        <div class="card-info">
+          <div class="card-year">2025</div>
+          <div class="card-title">The Bride Has Gone To Pick Flowers</div>
+          <div class="card-venue">Cue Art Foundation, New York</div>
+          <span class="card-pdf">View catalogue ↗</span>
+        </div>
+      </a>
+
+      <a class="catalogue-card" href="catalogues/common-ground.pdf" target="_blank" rel="noopener">
+        <div class="card-img">
+          <img src="assets/catalogues/cat_2022_common.jpg" alt="Now That We Have Established A Common Ground" loading="lazy" />
+        </div>
+        <div class="card-info">
+          <div class="card-year">2022</div>
+          <div class="card-title">Now That We Have Established A Common Ground</div>
+          <div class="card-venue">Protocinema's Emerging Curator Series</div>
+          <span class="card-pdf">View catalogue ↗</span>
+        </div>
+      </a>
+
+      <a class="catalogue-card" href="catalogues/tree-laden-with-fruit.pdf" target="_blank" rel="noopener">
+        <div class="card-img">
+          <img src="assets/catalogues/cat_2020_tree.jpg" alt="I open my eyes and see myself under a tree laden with fruit that I cannot name" loading="lazy" />
+        </div>
+        <div class="card-info">
+          <div class="card-year">2020</div>
+          <div class="card-title">I open my eyes and see myself under a tree laden with fruit that I cannot name</div>
+          <div class="card-venue">Center for Book Arts, New York</div>
+          <span class="card-pdf">View catalogue ↗</span>
+        </div>
+      </a>
+
+      <a class="catalogue-card" href="catalogues/echoes-beirut.pdf" target="_blank" rel="noopener">
+        <div class="card-img">
+          <img src="assets/catalogues/cat_2019_echoes_a.jpg" alt="On Echoes of Invisible Hearts — Station Beirut" loading="lazy" />
+        </div>
+        <div class="card-info">
+          <div class="card-year">2019</div>
+          <div class="card-title">On Echoes of Invisible Hearts: Image Making and Popular Archiving in Times of Unrest</div>
+          <div class="card-venue">Station Beirut</div>
+          <span class="card-pdf">View catalogue ↗</span>
+        </div>
+      </a>
+
+      <a class="catalogue-card" href="catalogues/echoes-berlin.pdf" target="_blank" rel="noopener">
+        <div class="card-img">
+          <img src="assets/catalogues/cat_2018_echoes_b.jpg" alt="On Echoes of Invisible Hearts — Poetry Project Berlin" loading="lazy" />
+        </div>
+        <div class="card-info">
+          <div class="card-year">2018</div>
+          <div class="card-title">On Echoes of Invisible Hearts: Narratives of Yemeni Displacement</div>
+          <div class="card-venue">Poetry Project, Berlin</div>
+          <span class="card-pdf">View catalogue ↗</span>
+        </div>
+      </a>
+
+      <a class="catalogue-card" href="catalogues/spheres-of-influence.pdf" target="_blank" rel="noopener">
+        <div class="card-img">
+          <img src="assets/catalogues/cat_2016_spheres.jpg" alt="Spheres of Influence" loading="lazy" />
+        </div>
+        <div class="card-info">
+          <div class="card-year">2016</div>
+          <div class="card-title">Spheres of Influence: Codes and Conduct Across Structural Landscapes</div>
+          <div class="card-venue">Mohsen Gallery, Tehran</div>
+          <span class="card-pdf">View catalogue ↗</span>
+        </div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2025 Lila Nazemian
+  </footer>
+
+  <script>
+    function openDrawer() {
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+  </script>
+</body>
+</html>
