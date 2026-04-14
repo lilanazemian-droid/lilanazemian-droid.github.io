@@ -24,13 +24,28 @@
       letter-spacing: 0.04em;
     }
 
-    /* ── Drawer compact sizing ── */
+    /* ── Drawer: dropdown below button, top-right area ── */
     .drawer {
-      width: fit-content !important;
-      min-width: 0 !important;
+      top: 140px !important;
+      right: 16px !important;
+      left: auto !important;
       height: fit-content !important;
-      padding-left: 32px !important;
-      padding-right: 40px !important;
+      width: fit-content !important;
+      min-width: 160px !important;
+      padding: 22px 44px 26px 32px !important;
+      border-left: none !important;
+      border: 0.5px solid var(--border) !important;
+      border-radius: 6px !important;
+      transform: translateY(-10px) !important;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.28s cubic-bezier(0.34,1.18,0.64,1),
+                  opacity 0.2s ease !important;
+    }
+    .drawer.open {
+      transform: translateY(0) !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
     }
 
     /* ── Floating menu button ── */
@@ -56,8 +71,6 @@
       0%, 100% { transform: translateY(0px); }
       50%       { transform: translateY(-10px); }
     }
-    @keyframes btnSpinCW  { from { transform: rotate(0deg);   } to { transform: rotate(360deg);  } }
-    @keyframes btnSpinCCW { from { transform: rotate(0deg);   } to { transform: rotate(-360deg); } }
 
     .catalogue-grid {
       display: grid;
@@ -138,28 +151,23 @@
   <button class="menu-btn" onclick="toggleDrawer()" aria-label="Open/close menu">
     <div class="btn-float">
       <svg viewBox="-24 -24 48 48" width="108" height="108" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="cp2" cx="38%" cy="28%"><stop offset="0%" stop-color="#f0dcea"/><stop offset="100%" stop-color="#b060b0"/></radialGradient>
-          <radialGradient id="ci2" cx="38%" cy="28%"><stop offset="0%" stop-color="#e8cce4"/><stop offset="100%" stop-color="#c090c4"/></radialGradient>
-          <radialGradient id="cc2" cx="35%" cy="32%"><stop offset="0%" stop-color="#fff8c0"/><stop offset="55%" stop-color="#f5d060"/><stop offset="100%" stop-color="#b86000"/></radialGradient>
-        </defs>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(0)"/>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(45)"/>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(90)"/>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(135)"/>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(180)"/>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(225)"/>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(270)"/>
-        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="url(#cp2)" transform="rotate(315)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(22.5)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(67.5)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(112.5)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(157.5)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(202.5)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(247.5)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(292.5)"/>
-        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="url(#ci2)" opacity="0.78" transform="rotate(337.5)"/>
-        <circle r="6" fill="url(#cc2)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(0)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(45)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(90)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(135)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(180)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(225)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(270)"/>
+        <path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="#d8b0d5" transform="rotate(315)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(22.5)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(67.5)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(112.5)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(157.5)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(202.5)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(247.5)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(292.5)"/>
+        <path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="#d8b0d5" opacity="0.72" transform="rotate(337.5)"/>
+        <circle r="5" fill="#f5d060" opacity="0.85"/>
       </svg>
     </div>
   </button>
@@ -247,21 +255,30 @@
   </main>
 
   <script>
-    var _cosmosDir = Math.random() < 0.5 ? 'btnSpinCW' : 'btnSpinCCW';
+    var _baseRate = Math.random() < 0.5 ? 1 : -1;
+    var _spinAnim;
     (function () {
       var svg = document.querySelector('.menu-btn .btn-float svg');
-      if (svg) svg.style.animation = _cosmosDir + ' 11s linear infinite';
+      if (!svg) return;
+      _spinAnim = svg.animate(
+        [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
+        { duration: 11000, iterations: Infinity, easing: 'linear' }
+      );
+      _spinAnim.playbackRate = _baseRate;
     }());
 
     function _spinBtn() {
-      var svg = document.querySelector('.menu-btn .btn-float svg');
-      if (!svg) return;
-      svg.style.animation = 'none';
-      var deg = _cosmosDir === 'btnSpinCW' ? '1440deg' : '-1440deg';
-      svg.animate(
-        [{ transform: 'rotate(0deg)' }, { transform: 'rotate(' + deg + ')' }],
-        { duration: 700, easing: 'ease-out' }
-      ).onfinish = function () { svg.style.animation = _cosmosDir + ' 11s linear infinite'; };
+      if (!_spinAnim) return;
+      _spinAnim.playbackRate = _baseRate * 6;
+      var t0 = null, peak = _baseRate * 6, dur = 1800;
+      function ease(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        var e = 1 - Math.pow(1 - p, 2.5);
+        _spinAnim.playbackRate = peak + (_baseRate - peak) * e;
+        if (p < 1) requestAnimationFrame(ease);
+      }
+      requestAnimationFrame(ease);
     }
 
     function openDrawer() {
