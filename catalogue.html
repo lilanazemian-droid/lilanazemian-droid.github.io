@@ -721,9 +721,9 @@
     }
 
     function start() {
-      if (_muted) return;
-      if (!ctx) ctx = new AC();
-      ctx.resume().then(function() { if (ctx.state === 'running') setup(); });
+      if (_muted || !ctx) return;
+      try { var b=ctx.createBuffer(1,1,ctx.sampleRate),s=ctx.createBufferSource(); s.buffer=b; s.connect(ctx.destination); s.start(0); } catch(ex){}
+      ctx.resume().then(setup);
     }
 
     window._toggleSiteMusic = function() {
@@ -741,7 +741,7 @@
 
     if (!_muted) {
       start();
-      ['pointerdown','touchstart','keydown'].forEach(function(ev) {
+      ['pointerdown','touchstart','touchend','keydown'].forEach(function(ev) {
         document.addEventListener(ev, start, { once: true, passive: true });
       });
     }
@@ -834,39 +834,38 @@
       }
     } catch (e) {}
 
-    function xy(e) { return e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY]; }
-
     function onStart(e) {
-      if (e.button !== undefined && e.button !== 0) return;
-      var c = xy(e); startX = c[0]; startY = c[1];
-      var r = btn.getBoundingClientRect(); startLeft = r.left; startTop = r.top;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      var r = btn.getBoundingClientRect();
+      startX = e.clientX; startY = e.clientY;
+      startLeft = r.left; startTop = r.top;
       btn.style.right = 'auto'; btn.style.transform = 'none';
       btn.style.left = startLeft + 'px'; btn.style.top = startTop + 'px';
       dragging = true; _wasDrag = false;
-      e.preventDefault();
+      btn.setPointerCapture(e.pointerId);
     }
     function onMove(e) {
       if (!dragging) return;
-      var c = xy(e), dx = c[0] - startX, dy = c[1] - startY;
-      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) _wasDrag = true;
-      btn.style.left = Math.max(0, Math.min(window.innerWidth  - btn.offsetWidth,  startLeft + dx)) + 'px';
-      btn.style.top  = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, startTop  + dy)) + 'px';
-      if (_wasDrag) e.preventDefault();
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) _wasDrag = true;
+      if (_wasDrag) {
+        e.preventDefault();
+        btn.style.left = Math.max(0, Math.min(window.innerWidth  - btn.offsetWidth,  startLeft + dx)) + 'px';
+        btn.style.top  = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, startTop  + dy)) + 'px';
+      }
     }
     function onEnd() {
       if (!dragging) return; dragging = false;
-      if (_wasDrag) { try { localStorage.setItem(KEY, JSON.stringify({ x: parseFloat(btn.style.left), y: parseFloat(btn.style.top) })); } catch (e) {} }
+      if (_wasDrag) { try { localStorage.setItem(KEY, JSON.stringify({ x: parseFloat(btn.style.left), y: parseFloat(btn.style.top) })); } catch (ex) {} }
     }
 
     btn.addEventListener('click', function (e) {
       if (_wasDrag) { _wasDrag = false; e.stopImmediatePropagation(); e.preventDefault(); }
     }, true);
-    btn.addEventListener('mousedown', onStart);
-    btn.addEventListener('touchstart', onStart, { passive: false });
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('touchmove', onMove, { passive: false });
-    document.addEventListener('mouseup', onEnd);
-    document.addEventListener('touchend', onEnd);
+    btn.addEventListener('pointerdown', onStart);
+    btn.addEventListener('pointermove', onMove, { passive: false });
+    btn.addEventListener('pointerup',   onEnd);
+    btn.addEventListener('pointercancel', onEnd);
   }());
   </script>
   <script src="assets/nav.js"></script>
