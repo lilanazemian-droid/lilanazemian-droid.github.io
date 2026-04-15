@@ -268,32 +268,156 @@
     </svg>
   </button>
 
-  <!-- Tinkle + mute (catalogue has no full music, but respects mute state) -->
+  <!-- Isfahan music box — melody variation, link tinkle, mute -->
   <script>
   (function () {
     var AC = window.AudioContext || window.webkitAudioContext;
-    var ctx, ready = false;
+    if (!AC) return;
+
+    var D4  = 587.33, E4 = 659.26,
+        Fk4 = D4 * Math.pow(2, 350 / 1200),
+        G4  = 784.00, A4 = 880.00, Bb4 = 932.33;
+
+    var tempo = 0.88 + Math.random() * 0.24;
+    function ms(x) { return x * tempo; }
+
+    var mel1 = [
+      {f:A4,d:ms(560)},{f:G4,d:ms(390)},{f:Fk4,d:ms(760)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(1200)},{f:0,d:ms(420)},
+      {f:D4,d:ms(280)},{f:E4,d:ms(280)},{f:Fk4,d:ms(430)},
+      {f:G4,d:ms(560)},{f:A4,d:ms(390)},{f:Bb4,d:ms(610)},
+      {f:A4,d:ms(390)},{f:G4,d:ms(390)},{f:Fk4,d:ms(560)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(1500)},{f:0,d:ms(500)},
+      {f:E4,d:ms(200)},{f:Fk4,d:ms(250)},{f:E4,d:ms(200)},
+      {f:D4,d:ms(250)},{f:E4,d:ms(200)},{f:Fk4,d:ms(610)},
+      {f:G4,d:ms(760)},{f:Fk4,d:ms(430)},{f:E4,d:ms(390)},
+      {f:D4,d:ms(2000)},{f:0,d:ms(1200)}
+    ];
+    var mel2 = [
+      {f:D4,d:ms(560)},{f:E4,d:ms(390)},{f:Fk4,d:ms(760)},
+      {f:G4,d:ms(390)},{f:A4,d:ms(1200)},{f:0,d:ms(420)},
+      {f:A4,d:ms(280)},{f:G4,d:ms(280)},{f:Fk4,d:ms(430)},
+      {f:E4,d:ms(560)},{f:D4,d:ms(390)},{f:E4,d:ms(610)},
+      {f:Fk4,d:ms(390)},{f:E4,d:ms(390)},{f:D4,d:ms(560)},{f:0,d:ms(500)},
+      {f:G4,d:ms(200)},{f:Fk4,d:ms(250)},{f:G4,d:ms(200)},
+      {f:A4,d:ms(250)},{f:G4,d:ms(200)},{f:Fk4,d:ms(610)},
+      {f:E4,d:ms(760)},{f:D4,d:ms(2000)},{f:0,d:ms(1200)}
+    ];
+    var mel3 = [
+      {f:Bb4,d:ms(760)},{f:A4,d:ms(560)},
+      {f:G4,d:ms(390)},{f:Fk4,d:ms(760)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(1500)},{f:0,d:ms(500)},
+      {f:D4,d:ms(280)},{f:Fk4,d:ms(430)},{f:A4,d:ms(560)},
+      {f:Bb4,d:ms(610)},{f:A4,d:ms(390)},{f:G4,d:ms(390)},
+      {f:Fk4,d:ms(560)},{f:E4,d:ms(390)},{f:D4,d:ms(1200)},{f:0,d:ms(420)},
+      {f:E4,d:ms(200)},{f:Fk4,d:ms(200)},{f:E4,d:ms(200)},
+      {f:D4,d:ms(200)},{f:E4,d:ms(430)},
+      {f:Fk4,d:ms(390)},{f:G4,d:ms(560)},{f:Fk4,d:ms(430)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(2200)},{f:0,d:ms(1200)}
+    ];
+    var mel = [mel1, mel2, mel3][Math.floor(Math.random() * 3)];
+
+    var PARTIALS = [
+      [1.000, 1.00, 2.4],
+      [2.756, 0.32, 0.50],
+      [5.404, 0.10, 0.18],
+    ];
+
+    var ctx, masterGain, nextTime = 0, idx = 0, ready = false;
     var _muted = localStorage.getItem('siteMuted') === 'true';
 
-    // Apply saved mute state to button on load
     (function () {
       var btn = document.getElementById('mute-btn');
       if (btn && _muted) btn.classList.add('muted');
     }());
 
-    var D4 = 587.33, E4 = 659.26,
-        Fk4 = D4 * Math.pow(2, 350 / 1200),
-        G4 = 784.00, A4 = 880.00;
+    function makeReverb() {
+      var conv = ctx.createConvolver(), n = ctx.sampleRate * 3,
+          buf  = ctx.createBuffer(2, n, ctx.sampleRate);
+      for (var c = 0; c < 2; c++) {
+        var d = buf.getChannelData(c);
+        for (var i = 0; i < n; i++)
+          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2.1);
+      }
+      conv.buffer = buf; return conv;
+    }
+
+    function makeHallReverb() {
+      var conv = ctx.createConvolver(), n = ctx.sampleRate * 5,
+          buf  = ctx.createBuffer(2, n, ctx.sampleRate);
+      var pre = Math.floor(ctx.sampleRate * 0.022);
+      for (var c = 0; c < 2; c++) {
+        var d = buf.getChannelData(c);
+        for (var i = 0; i < n; i++) {
+          if (i < pre) { d[i] = 0; continue; }
+          var tt = (i - pre) / (n - pre);
+          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - tt, 1.2);
+        }
+      }
+      conv.buffer = buf; return conv;
+    }
+
+    function strikeTine(freq, startTime) {
+      PARTIALS.forEach(function(p) {
+        var osc = ctx.createOscillator(), ng = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq * p[0];
+        ng.gain.setValueAtTime(0, startTime);
+        ng.gain.linearRampToValueAtTime(p[1], startTime + 0.003);
+        ng.gain.exponentialRampToValueAtTime(0.0001, startTime + p[2]);
+        osc.connect(ng); ng.connect(masterGain);
+        osc.start(startTime); osc.stop(startTime + p[2] + 0.05);
+      });
+    }
+
+    function tick() {
+      while (nextTime < ctx.currentTime + 2.0) {
+        var note = mel[idx], dur = note.d / 1000;
+        if (note.f > 0) strikeTine(note.f, nextTime);
+        nextTime += dur;
+        idx = (idx + 1) % mel.length;
+        if (idx === 0) nextTime += 2.5;
+      }
+      setTimeout(tick, 80);
+    }
+
+    function startWind() {
+      var len = ctx.sampleRate * 8, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+      for (var c = 0; c < 2; c++) {
+        var d = buf.getChannelData(c);
+        for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      }
+      var noise = ctx.createBufferSource();
+      noise.buffer = buf; noise.loop = true;
+      var hp = ctx.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 80; hp.Q.value = 0.4;
+      var lp = ctx.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 650; lp.Q.value = 0.5;
+      var wGain = ctx.createGain();
+      wGain.gain.setValueAtTime(0, ctx.currentTime);
+      wGain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 2.5);
+      var aLFO = ctx.createOscillator(), aLFOG = ctx.createGain();
+      aLFO.frequency.value = 0.05; aLFOG.gain.value = 0.018;
+      aLFO.connect(aLFOG); aLFOG.connect(wGain.gain); aLFO.start();
+      var fLFO = ctx.createOscillator(), fLFOG = ctx.createGain();
+      fLFO.frequency.value = 0.024; fLFOG.gain.value = 180;
+      fLFO.connect(fLFOG); fLFOG.connect(lp.frequency); fLFO.start();
+      var wRevConv = makeReverb(), wRevG = ctx.createGain();
+      wRevG.gain.value = 0.85;
+      noise.connect(hp); hp.connect(lp); lp.connect(wGain);
+      wGain.connect(ctx.destination);
+      wGain.connect(wRevConv); wRevConv.connect(wRevG); wRevG.connect(ctx.destination);
+      noise.start();
+    }
 
     var tinkleBusy = false;
     function tinkle() {
-      if (!ctx || _muted || tinkleBusy) return;
+      if (!ready || !ctx || _muted || tinkleBusy) return;
       tinkleBusy = true;
-      setTimeout(function () { tinkleBusy = false; }, 120);
-      var TNOTES = [D4 * 4, E4 * 4, Fk4 * 4, G4 * 4, A4 * 4];
+      setTimeout(function() { tinkleBusy = false; }, 120);
+      var TNOTES = [D4*4, E4*4, Fk4*4, G4*4, A4*4];
       var f = TNOTES[Math.floor(Math.random() * TNOTES.length)]
               * Math.pow(2, (Math.random() * 14 - 7) / 1200);
-      [[1.0, 0.08, 0.36], [2.756, 0.025, 0.12]].forEach(function (p) {
+      [[1.0, 0.08, 0.36], [2.756, 0.025, 0.12]].forEach(function(p) {
         var osc = ctx.createOscillator(), g = ctx.createGain();
         osc.type = 'sine'; osc.frequency.value = f * p[0];
         g.gain.setValueAtTime(0, ctx.currentTime);
@@ -304,24 +428,31 @@
       });
     }
 
-    function initAudio() {
-      if (!AC || ready || _muted) return;
-      ctx = new AC();
-      ctx.resume().then(function () {
-        if (ctx.state === 'running') {
-          ready = true;
-          document.querySelectorAll('a').forEach(function (a) {
-            a.addEventListener('mouseenter', tinkle);
-          });
-        }
+    function setup() {
+      if (ready) return;
+      ready = true;
+      var rev = makeHallReverb(), rvg = ctx.createGain();
+      rvg.gain.value = 0.54;
+      masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0, ctx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(0.36, ctx.currentTime + 0.8);
+      masterGain.connect(ctx.destination);
+      masterGain.connect(rev); rev.connect(rvg); rvg.connect(ctx.destination);
+      nextTime = ctx.currentTime + 0.5;
+      tick();
+      startWind();
+      document.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('mouseenter', tinkle);
       });
     }
 
-    ['click', 'touchstart', 'keydown'].forEach(function (ev) {
-      document.addEventListener(ev, initAudio, { once: true, passive: true });
-    });
+    function start() {
+      if (_muted) return;
+      if (!ctx) ctx = new AC();
+      ctx.resume().then(function() { if (ctx.state === 'running') setup(); });
+    }
 
-    window._toggleSiteMusic = function () {
+    window._toggleSiteMusic = function() {
       _muted = !_muted;
       localStorage.setItem('siteMuted', _muted ? 'true' : 'false');
       var btn = document.getElementById('mute-btn');
@@ -329,10 +460,39 @@
       if (_muted) {
         if (ctx) ctx.suspend();
       } else {
-        if (!ctx) initAudio();
-        else ctx.resume().then(function () { ready = true; });
+        if (!ctx || ctx.state === 'suspended') start();
+        else if (ctx) ctx.resume();
       }
     };
+
+    if (!_muted) {
+      start();
+      ['click','touchstart','keydown'].forEach(function(ev) {
+        document.addEventListener(ev, start, { once: true, passive: true });
+      });
+    }
+
+    var D5=D4*2, E5=E4*2, Fk5=Fk4*2, G5=G4*2, A5=A4*2, Bb5=Bb4*2;
+    var splurges = [
+      [[A5,0],[G5,80],[Fk5,170]],
+      [[D5,0],[Fk5,70],[A5,150]],
+      [[G5,0],[E5,65],[Fk5,130],[D5,220]],
+      [[Fk5,0],[E5,55],[Fk5,110],[G5,190]],
+      [[A5,0],[G5,90],[E5,190]],
+      [[E5,0],[Fk5,60],[G5,120],[A5,200]],
+      [[Bb5,0],[A5,75],[G5,160]],
+      [[D5,0],[E5,50],[Fk5,95],[E5,150]],
+    ];
+    var scrollBusy = false;
+    window.addEventListener('scroll', function() {
+      if (scrollBusy || !ready || !ctx || _muted) return;
+      scrollBusy = true;
+      setTimeout(function() { scrollBusy = false; }, 380);
+      var pat = splurges[Math.floor(Math.random() * splurges.length)];
+      var now = ctx.currentTime;
+      var bend = Math.pow(2, (Math.random() * 24 - 12) / 1200);
+      pat.forEach(function(n) { strikeTine(n[0]*bend, now+n[1]/1000); });
+    }, { passive: true });
   }());
   </script>
 
@@ -380,6 +540,60 @@
       }
     }
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+  </script>
+
+  <!-- Draggable cosmos button -->
+  <script>
+  (function () {
+    var btn = document.querySelector('.menu-btn');
+    if (!btn) return;
+    var KEY = 'menuBtnPos';
+    var dragging = false, _wasDrag = false;
+    var startX, startY, startLeft, startTop;
+
+    try {
+      var saved = JSON.parse(localStorage.getItem(KEY));
+      if (saved) {
+        btn.style.right = 'auto'; btn.style.transform = 'none';
+        btn.style.left = Math.min(saved.x, window.innerWidth  - btn.offsetWidth)  + 'px';
+        btn.style.top  = Math.min(saved.y, window.innerHeight - btn.offsetHeight) + 'px';
+      }
+    } catch (e) {}
+
+    function xy(e) { return e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY]; }
+
+    function onStart(e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      var c = xy(e); startX = c[0]; startY = c[1];
+      var r = btn.getBoundingClientRect(); startLeft = r.left; startTop = r.top;
+      btn.style.right = 'auto'; btn.style.transform = 'none';
+      btn.style.left = startLeft + 'px'; btn.style.top = startTop + 'px';
+      dragging = true; _wasDrag = false;
+      e.preventDefault();
+    }
+    function onMove(e) {
+      if (!dragging) return;
+      var c = xy(e), dx = c[0] - startX, dy = c[1] - startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) _wasDrag = true;
+      btn.style.left = Math.max(0, Math.min(window.innerWidth  - btn.offsetWidth,  startLeft + dx)) + 'px';
+      btn.style.top  = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, startTop  + dy)) + 'px';
+      if (_wasDrag) e.preventDefault();
+    }
+    function onEnd() {
+      if (!dragging) return; dragging = false;
+      if (_wasDrag) { try { localStorage.setItem(KEY, JSON.stringify({ x: parseFloat(btn.style.left), y: parseFloat(btn.style.top) })); } catch (e) {} }
+    }
+
+    btn.addEventListener('click', function (e) {
+      if (_wasDrag) { _wasDrag = false; e.stopImmediatePropagation(); e.preventDefault(); }
+    }, true);
+    btn.addEventListener('mousedown', onStart);
+    btn.addEventListener('touchstart', onStart, { passive: false });
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchend', onEnd);
+  }());
   </script>
 </body>
 </html>
