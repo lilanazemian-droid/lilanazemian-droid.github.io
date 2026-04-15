@@ -513,6 +513,17 @@
     var ctx, masterGain, nextTime = 0, idx = 0, ready = false;
     var _muted = localStorage.getItem('siteMuted') === 'true';
 
+    // Pre-build the audio graph immediately at page load so the reverb
+    // computation is done before the first user gesture — no startup lag.
+    try {
+      ctx = new AC();
+      var _rev = makeHallReverb(), _rvg = ctx.createGain();
+      _rvg.gain.value = 0.54;
+      masterGain = ctx.createGain(); masterGain.gain.value = 0;
+      masterGain.connect(ctx.destination);
+      masterGain.connect(_rev); _rev.connect(_rvg); _rvg.connect(ctx.destination);
+    } catch(e) {}
+
     function makeReverb() {
       var conv = ctx.createConvolver(), n = ctx.sampleRate * 3,
           buf  = ctx.createBuffer(2, n, ctx.sampleRate);
@@ -614,14 +625,10 @@
     function setup() {
       if (ready) return;
       ready = true;
-      var rev = makeHallReverb(), rvg = ctx.createGain();
-      rvg.gain.value = 0.54;
-      masterGain = ctx.createGain();
+      // Graph already built at load time — just ramp up and schedule
       masterGain.gain.setValueAtTime(0, ctx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(0.36, ctx.currentTime + 0.8);
-      masterGain.connect(ctx.destination);
-      masterGain.connect(rev); rev.connect(rvg); rvg.connect(ctx.destination);
-      nextTime = ctx.currentTime + 0.5;
+      masterGain.gain.linearRampToValueAtTime(0.36, ctx.currentTime + 0.3);
+      nextTime = ctx.currentTime + 0.1;
       tick();
       startWind();
       // Delegated link hover tinkle (works on dynamically swapped content)
