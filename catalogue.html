@@ -843,7 +843,7 @@
       btn.style.right = 'auto'; btn.style.transform = 'none';
       btn.style.left = startLeft + 'px'; btn.style.top = startTop + 'px';
       dragging = true; _wasDrag = false;
-      btn.setPointerCapture(e.pointerId);
+      try { btn.setPointerCapture(e.pointerId); } catch(ex) {}
     }
     function onMove(e) {
       if (!dragging) return;
@@ -864,9 +864,9 @@
       if (_wasDrag) { _wasDrag = false; e.stopImmediatePropagation(); e.preventDefault(); }
     }, true);
     btn.addEventListener('pointerdown', onStart);
-    btn.addEventListener('pointermove', onMove, { passive: false });
-    btn.addEventListener('pointerup',   onEnd);
-    btn.addEventListener('pointercancel', onEnd);
+    document.addEventListener('pointermove', onMove, { passive: false });
+    document.addEventListener('pointerup',   onEnd);
+    document.addEventListener('pointercancel', onEnd);
   }());
   </script>
   <script src="assets/nav.js"></script>
