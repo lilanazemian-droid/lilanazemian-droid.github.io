@@ -663,6 +663,10 @@
       }
     };
 
+    // Pause/resume without touching the mute preference (used by video modal)
+    window._pauseSiteMusic  = function() { if (ctx) ctx.suspend(); };
+    window._resumeSiteMusic = function() { if (ctx && !_muted) ctx.resume(); };
+
     // Apply saved mute state to button on load
     (function() {
       var btn = document.getElementById('mute-btn');

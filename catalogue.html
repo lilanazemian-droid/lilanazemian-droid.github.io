@@ -739,6 +739,10 @@
       }
     };
 
+    // Pause/resume without touching the mute preference (used by video modal)
+    window._pauseSiteMusic  = function() { if (ctx) ctx.suspend(); };
+    window._resumeSiteMusic = function() { if (ctx && !_muted) ctx.resume(); };
+
     if (!_muted) {
       start();
       ['pointerdown','touchstart','touchend','keydown'].forEach(function(ev) {

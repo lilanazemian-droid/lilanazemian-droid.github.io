@@ -210,25 +210,47 @@
         </p>
       </div>
     </section>
-  </main>
 
-
-  <!-- Video modal -->
-  <div id="video-modal" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;">
-    <div style="position:relative;width:min(90vw,900px);aspect-ratio:16/9;">
-      <iframe id="yt-frame"
-        src=""
-        title="Vasvase Music Video"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-        style="width:100%;height:100%;border-radius:4px;">
-      </iframe>
+    <!-- Video modal — lives inside <main> so SPA nav injects it on every visit -->
+    <div id="video-modal" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;">
+      <div style="position:relative;width:min(90vw,900px);aspect-ratio:16/9;">
+        <iframe id="yt-frame"
+          src=""
+          title="Vasvase Music Video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          style="width:100%;height:100%;border-radius:4px;">
+        </iframe>
+      </div>
+      <button onclick="window.closeVideo && window.closeVideo()" aria-label="Close video"
+        style="position:fixed;top:24px;right:24px;background:none;border:none;cursor:pointer;color:#f5f2ed;font-size:28px;line-height:1;opacity:0.75;">&#10005;</button>
     </div>
-    <button onclick="closeVideo()" aria-label="Close video"
-      style="position:fixed;top:24px;right:24px;background:none;border:none;cursor:pointer;color:#f5f2ed;font-size:28px;line-height:1;opacity:0.75;">&#10005;</button>
-  </div>
+    <script>
+    (function () {
+      var YT_SRC = 'https://www.youtube.com/embed/SYBYWYt3yhA?si=Epoiw7V4sG9mFtDU&autoplay=1';
+      window.openVideo = function () {
+        var modal = document.getElementById('video-modal');
+        if (!modal) return;
+        document.getElementById('yt-frame').src = YT_SRC;
+        modal.style.display = 'flex';
+        window._pauseSiteMusic && window._pauseSiteMusic();
+      };
+      window.closeVideo = function () {
+        var modal = document.getElementById('video-modal');
+        if (!modal || modal.style.display === 'none') return;
+        document.getElementById('yt-frame').src = '';
+        modal.style.display = 'none';
+        window._resumeSiteMusic && window._resumeSiteMusic();
+      };
+      var modal = document.getElementById('video-modal');
+      if (modal) modal.addEventListener('click', function (e) {
+        if (e.target === this) window.closeVideo();
+      });
+    }());
+    </script>
+  </main>
 
   <!-- Mute button -->
   <button id="mute-btn" class="mute-btn" onclick="window._toggleSiteMusic && window._toggleSiteMusic()" aria-label="Toggle music">
@@ -576,29 +598,7 @@
       }
     }
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { closeDrawer(); closeVideo(); }
-    });
-
-    var YT_SRC = 'https://www.youtube.com/embed/SYBYWYt3yhA?si=Epoiw7V4sG9mFtDU&autoplay=1';
-
-    function openVideo() {
-      var modal = document.getElementById('video-modal');
-      document.getElementById('yt-frame').src = YT_SRC;
-      modal.style.display = 'flex';
-      window._pauseSiteMusic && window._pauseSiteMusic();
-    }
-
-    function closeVideo() {
-      var modal = document.getElementById('video-modal');
-      if (modal.style.display === 'none') return;
-      document.getElementById('yt-frame').src = '';   // stops playback
-      modal.style.display = 'none';
-      window._resumeSiteMusic && window._resumeSiteMusic();
-    }
-
-    // Click outside the iframe to close
-    document.getElementById('video-modal').addEventListener('click', function(e) {
-      if (e.target === this) closeVideo();
+      if (e.key === 'Escape') { closeDrawer(); window.closeVideo && window.closeVideo(); }
     });
   </script>
 
