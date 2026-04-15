@@ -351,14 +351,16 @@
 
     function drawSky() {
       var g = c.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0,    '#191228');
-      g.addColorStop(0.18, '#2b1e46');
-      g.addColorStop(0.38, '#573466');
-      g.addColorStop(0.55, '#8a4870');
-      g.addColorStop(0.68, '#b86048');
-      g.addColorStop(0.78, '#8a5070');   // pivot to muted lilac-purple
-      g.addColorStop(0.90, '#5a3a68');
-      g.addColorStop(1,    '#3c2850');
+      g.addColorStop(0,    '#0e0818');   // just a whisper of deep night at zenith
+      g.addColorStop(0.10, '#2a1838');   // quick exit from dark
+      g.addColorStop(0.22, '#6a3650');   // warm-purple, sunrise starts
+      g.addColorStop(0.38, '#b85840');   // warm auburn glow
+      g.addColorStop(0.52, '#c86848');   // peak warm auburn-orange
+      g.addColorStop(0.64, '#aa5860');   // warm fading into rose-mauve
+      g.addColorStop(0.76, '#8a4878');   // muted purple-lilac
+      g.addColorStop(0.86, '#6a3a6a');   // deeper lilac
+      g.addColorStop(0.94, '#4e2e58');   // dark lilac-purple
+      g.addColorStop(1,    '#3a2448');   // base
       c.fillStyle = g; c.fillRect(0, 0, W, H);
     }
 
