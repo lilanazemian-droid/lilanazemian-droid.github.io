@@ -95,29 +95,48 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ─── COSMOS BUTTON GLOW ─── */
-/* drop-shadow on the SVG follows each petal outward like spokes,
-   compositing into a natural starburst / rays-of-light effect.
-   No spread-radius — blur only, so the light stays soft and circular. */
-.menu-btn .btn-float svg {
+/* Radial-gradient on ::before — perfectly circular on every browser/OS.
+   Animates via opacity + scale so no filter is needed and iOS Safari
+   cannot clip it to a rectangular bounds. The SVG keeps a small
+   drop-shadow only for depth; the glow comes entirely from ::before. */
+.menu-btn .btn-float {
+  position: relative;
+}
+.menu-btn .btn-float::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  /* oversized so the gradient edge is far from centre */
+  width: 320px; height: 320px;
+  transform: translate(-50%, -50%) scale(0.12);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  /* sharp bright core → radiating rings → transparent edge */
+  background: radial-gradient(circle,
+    rgba(255, 252, 255, 1.00)  0%,
+    rgba(245, 210, 255, 0.95)  8%,
+    rgba(220, 160, 240, 0.82) 20%,
+    rgba(195, 115, 230, 0.58) 38%,
+    rgba(165,  80, 215, 0.30) 58%,
+    rgba(140,  55, 200, 0.10) 75%,
+    transparent               88%
+  );
   animation: cosmos-beam 2.6s ease-in-out infinite;
 }
+.menu-btn .btn-float svg {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 5px 14px rgba(0,0,0,0.40));
+}
 @keyframes cosmos-beam {
-  /* dim baseline — barely visible */
   0%, 100% {
-    filter:
-      drop-shadow(0 0  2px rgba(255,248,255,0.20))
-      drop-shadow(0 0  8px rgba(216,176,213,0.25))
-      drop-shadow(0 6px 16px rgba(0,0,0,0.35));
+    opacity: 0.08;
+    transform: translate(-50%, -50%) scale(0.18);
   }
-  /* full burst — rays extend along every petal axis */
   50% {
-    filter:
-      drop-shadow(0 0  3px rgba(255,252,255,1.00))
-      drop-shadow(0 0 12px rgba(240,210,255,1.00))
-      drop-shadow(0 0 28px rgba(215,155,235,0.90))
-      drop-shadow(0 0 52px rgba(190,110,225,0.65))
-      drop-shadow(0 0 80px rgba(160, 75,210,0.35))
-      drop-shadow(0 6px 16px rgba(0,0,0,0.35));
+    opacity: 1.00;
+    transform: translate(-50%, -50%) scale(1.00);
   }
 }
 
