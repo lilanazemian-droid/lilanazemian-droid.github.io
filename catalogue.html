@@ -287,8 +287,33 @@
       for (var i = 0; i < 9; i++) clouds.push({ x: Math.random() * W * 1.4 - W * 0.2, y: H * (0.18 + Math.random() * 0.22), w: 65 + Math.random() * 130, h: 28 + Math.random() * 38, spd: 0.10 + Math.random() * 0.16, op: 0.16 + Math.random() * 0.20, t: 'fluffy' });
       for (var i = 0; i < 6; i++) clouds.push({ x: Math.random() * W * 1.2 - W * 0.1, y: H * (0.52 + Math.random() * 0.10), w: 170 + Math.random() * 220, h: 22 + Math.random() * 28, spd: 0.04 + Math.random() * 0.06, op: 0.08 + Math.random() * 0.10, t: 'mist' });
     }
+    // Swaying wildflowers at mountain base
+    var flowers = [];
+    var FCOLS = ['#d8b0d5','#c47252','#a05030','#e8c8a0','#c8906a','#8a4a2a','#dca882','#b8603a','#e0c8de'];
+    var SCOLS = ['#3a3018','#4a3820','#2e2810'];
+    function initFlowers() {
+      flowers = [];
+      for (var i = 0; i < 26; i++) {
+        var yf = 0.64 + Math.random() * 0.26;
+        var sc = 0.5 + yf * 0.85;
+        flowers.push({
+          x:  Math.random() * W * 1.04 - W * 0.02,
+          y:  H * yf,
+          sh: (14 + Math.random() * 28) * sc,
+          ph: Math.random() * Math.PI * 2,
+          sp: 0.22 + Math.random() * 0.42,
+          sw: 0.04 + Math.random() * 0.08,
+          pr: (2.2 + Math.random() * 4.0) * sc,
+          np: 5 + Math.floor(Math.random() * 3),
+          fc: FCOLS[Math.floor(Math.random() * FCOLS.length)],
+          sc: SCOLS[Math.floor(Math.random() * SCOLS.length)],
+          op: 0.42 + yf * 0.56
+        });
+      }
+    }
     initClouds();
-    window.addEventListener('resize', initClouds);
+    initFlowers();
+    window.addEventListener('resize', function() { initClouds(); initFlowers(); });
 
     function drawCloud(cl) {
       c.save(); c.globalAlpha = cl.op;
@@ -319,10 +344,11 @@
       g.addColorStop(0,    '#191228');
       g.addColorStop(0.18, '#2b1e46');
       g.addColorStop(0.38, '#573466');
-      g.addColorStop(0.58, '#9a638a');
-      g.addColorStop(0.74, '#c4909e');
-      g.addColorStop(0.88, '#d8b4a8');
-      g.addColorStop(1,    '#e8ccc0');
+      g.addColorStop(0.55, '#8a4870');
+      g.addColorStop(0.68, '#b86048');
+      g.addColorStop(0.80, '#9a4428');
+      g.addColorStop(0.90, '#7a3418');
+      g.addColorStop(1,    '#5a2410');
       c.fillStyle = g; c.fillRect(0, 0, W, H);
     }
 
@@ -330,19 +356,19 @@
       var px = W * 0.50, py = H * 0.30;
       var baseY = H * 0.70;
 
-      // Distant ridgeline
-      c.fillStyle = 'rgba(55, 38, 72, 0.38)';
+      // Distant ridgeline — warm dark brown
+      c.fillStyle = 'rgba(60, 32, 14, 0.42)';
       c.beginPath(); c.moveTo(-10, H);
       c.lineTo(-10, H * 0.62);
       c.bezierCurveTo(W*0.12, H*0.56, W*0.32, H*0.60, W*0.50, H*0.58);
       c.bezierCurveTo(W*0.68, H*0.56, W*0.86, H*0.61, W+10, H*0.65);
       c.lineTo(W+10, H); c.closePath(); c.fill();
 
-      // Main Damavand cone
+      // Main Damavand cone — dark with warm brown base
       var mg = c.createLinearGradient(px, py, px, baseY);
-      mg.addColorStop(0,   'rgba(32, 24, 48, 0.96)');
-      mg.addColorStop(0.4, 'rgba(40, 32, 58, 0.93)');
-      mg.addColorStop(1,   'rgba(36, 28, 52, 0.88)');
+      mg.addColorStop(0,   'rgba(28, 20, 42, 0.97)');
+      mg.addColorStop(0.4, 'rgba(38, 24, 18, 0.94)');
+      mg.addColorStop(1,   'rgba(52, 28, 10, 0.90)');
       c.fillStyle = mg;
       c.beginPath(); c.moveTo(-W*0.15, H);
       c.lineTo(-W*0.15, baseY);
@@ -364,14 +390,52 @@
       c.bezierCurveTo(px - W*0.004, py + H*0.108, px - W*0.012, py + H*0.100, px - W*0.022, py + H*0.065);
       c.closePath(); c.fill();
 
-      // Base mist / atmospheric haze
-      var hg = c.createLinearGradient(0, H*0.60, 0, H*0.75);
-      hg.addColorStop(0, 'rgba(175, 148, 168, 0)');
-      hg.addColorStop(1, 'rgba(195, 168, 185, 0.28)');
-      c.fillStyle = hg; c.fillRect(0, H*0.60, W, H*0.15);
+      // Base mist — warm auburn tint
+      var hg = c.createLinearGradient(0, H*0.60, 0, H*0.76);
+      hg.addColorStop(0, 'rgba(160, 80, 40, 0)');
+      hg.addColorStop(1, 'rgba(180, 100, 50, 0.22)');
+      c.fillStyle = hg; c.fillRect(0, H*0.60, W, H*0.16);
     }
 
-    function frame() {
+    function drawFlowers(t) {
+      flowers.forEach(function(f) {
+        var sway = Math.sin(t * f.sp + f.ph) * f.sw;
+        c.save();
+        c.translate(f.x, f.y);
+        c.rotate(sway);
+        c.globalAlpha = f.op;
+
+        // Stem — gentle bezier curve
+        c.beginPath();
+        c.strokeStyle = f.sc;
+        c.lineWidth = Math.max(0.7, f.pr * 0.22);
+        c.lineCap = 'round';
+        c.moveTo(0, 0);
+        c.quadraticCurveTo(sway * f.sh * 0.30, -f.sh * 0.52, 0, -f.sh);
+        c.stroke();
+
+        // Petals
+        c.translate(0, -f.sh);
+        for (var p = 0; p < f.np; p++) {
+          var a = (p / f.np) * Math.PI * 2;
+          c.fillStyle = f.fc;
+          c.beginPath();
+          c.ellipse(Math.cos(a) * f.pr, Math.sin(a) * f.pr, f.pr * 0.88, f.pr * 0.44, a, 0, Math.PI * 2);
+          c.fill();
+        }
+
+        // Centre
+        c.fillStyle = '#e8c860';
+        c.beginPath();
+        c.arc(0, 0, f.pr * 0.36, 0, Math.PI * 2);
+        c.fill();
+
+        c.restore();
+      });
+    }
+
+    function frame(ts) {
+      var t = (ts || 0) * 0.001;
       c.clearRect(0, 0, W, H);
       drawSky();
       // High clouds behind mountain
@@ -380,21 +444,22 @@
         drawCloud(cl);
       });
       drawMountain();
-      // Low clouds / mist in front of mountain
+      drawFlowers(t);
+      // Low mist in front of mountain
       clouds.filter(function(cl) { return cl.y >= H * 0.42; }).forEach(function(cl) {
         cl.x += cl.spd; if (cl.x > W + 350) cl.x = -350;
         drawCloud(cl);
       });
       requestAnimationFrame(frame);
     }
-    frame();
+    requestAnimationFrame(frame);
   }());
   </script>
 
   <!-- Cosmos snow -->
   <script>
   (function () {
-    var COLORS = ['#d8b0d5','#c090c4','#e0c8de','#b860b0','#f0dcea','#f5f2ed','#cda8ca'];
+    var COLORS = ['#d8b0d5','#c090c4','#e0c8de','#b860b0','#f0dcea','#f5f2ed','#cda8ca','#a05030','#c47252','#8a4a2a','#d4906a'];
     var N = 24;
     var wrap = document.createElement('div');
     wrap.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden;';
