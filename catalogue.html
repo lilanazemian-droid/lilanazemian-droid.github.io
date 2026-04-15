@@ -356,9 +356,9 @@
       g.addColorStop(0.38, '#573466');
       g.addColorStop(0.55, '#8a4870');
       g.addColorStop(0.68, '#b86048');
-      g.addColorStop(0.80, '#9a4428');
-      g.addColorStop(0.90, '#7a3418');
-      g.addColorStop(1,    '#5a2410');
+      g.addColorStop(0.78, '#8a5070');   // pivot to muted lilac-purple
+      g.addColorStop(0.90, '#5a3a68');
+      g.addColorStop(1,    '#3c2850');
       c.fillStyle = g; c.fillRect(0, 0, W, H);
     }
 
@@ -366,19 +366,19 @@
       var px = W * 0.50, py = H * 0.30;
       var baseY = H * 0.70;
 
-      // Distant ridgeline — warm dark brown
-      c.fillStyle = 'rgba(60, 32, 14, 0.42)';
+      // Distant ridgeline — ashy lilac
+      c.fillStyle = 'rgba(138, 122, 162, 0.48)';
       c.beginPath(); c.moveTo(-10, H);
       c.lineTo(-10, H * 0.62);
       c.bezierCurveTo(W*0.12, H*0.56, W*0.32, H*0.60, W*0.50, H*0.58);
       c.bezierCurveTo(W*0.68, H*0.56, W*0.86, H*0.61, W+10, H*0.65);
       c.lineTo(W+10, H); c.closePath(); c.fill();
 
-      // Main Damavand cone — dark with warm brown base
+      // Main Damavand cone — dark top, ashy lilac base
       var mg = c.createLinearGradient(px, py, px, baseY);
       mg.addColorStop(0,   'rgba(28, 20, 42, 0.97)');
-      mg.addColorStop(0.4, 'rgba(38, 24, 18, 0.94)');
-      mg.addColorStop(1,   'rgba(52, 28, 10, 0.90)');
+      mg.addColorStop(0.45, 'rgba(52, 38, 68, 0.94)');
+      mg.addColorStop(1,   'rgba(108, 92, 138, 0.90)');
       c.fillStyle = mg;
       c.beginPath(); c.moveTo(-W*0.15, H);
       c.lineTo(-W*0.15, baseY);
@@ -400,11 +400,28 @@
       c.bezierCurveTo(px - W*0.004, py + H*0.108, px - W*0.012, py + H*0.100, px - W*0.022, py + H*0.065);
       c.closePath(); c.fill();
 
-      // Base mist — warm auburn tint
-      var hg = c.createLinearGradient(0, H*0.60, 0, H*0.76);
-      hg.addColorStop(0, 'rgba(160, 80, 40, 0)');
-      hg.addColorStop(1, 'rgba(180, 100, 50, 0.22)');
-      c.fillStyle = hg; c.fillRect(0, H*0.60, W, H*0.16);
+      // Rolling ashy-lilac foothills — curved silhouette in the foreground
+      var fg = c.createLinearGradient(0, H*0.66, 0, H);
+      fg.addColorStop(0,   'rgba(172, 155, 198, 0.82)');
+      fg.addColorStop(0.35, 'rgba(145, 128, 175, 0.90)');
+      fg.addColorStop(1,   'rgba(108, 92, 145, 0.96)');
+      c.fillStyle = fg;
+      c.beginPath();
+      c.moveTo(-10, H);
+      c.lineTo(-10, H * 0.74);
+      c.bezierCurveTo(W*0.05, H*0.69,  W*0.12, H*0.76, W*0.20, H*0.72);
+      c.bezierCurveTo(W*0.28, H*0.68,  W*0.36, H*0.77, W*0.44, H*0.73);
+      c.bezierCurveTo(W*0.50, H*0.70,  W*0.56, H*0.75, W*0.63, H*0.71);
+      c.bezierCurveTo(W*0.71, H*0.67,  W*0.79, H*0.74, W*0.87, H*0.70);
+      c.bezierCurveTo(W*0.94, H*0.67,  W*1.02, H*0.72, W*1.10, H*0.69);
+      c.lineTo(W*1.10, H);
+      c.closePath(); c.fill();
+
+      // Soft lilac mist at foothill base
+      var hg = c.createLinearGradient(0, H*0.62, 0, H*0.78);
+      hg.addColorStop(0, 'rgba(180, 160, 210, 0)');
+      hg.addColorStop(1, 'rgba(160, 140, 195, 0.20)');
+      c.fillStyle = hg; c.fillRect(0, H*0.62, W, H*0.16);
     }
 
     function drawFlowers(t) {
