@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catalogue — Lila Nazemian</title>
+  <title>Catalogues — Lila Nazemian</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
-  <meta property="og:title"       content="Curatorial Catalogue — Lila Nazemian" />
+  <meta property="og:title"       content="Curatorial Catalogues — Lila Nazemian" />
   <meta property="og:description" content="Selected exhibitions and projects, 2016–2025." />
   <meta property="og:image"       content="https://lilanazemian.com/assets/og-image.png" />
   <meta property="og:type"        content="website" />
@@ -14,16 +14,6 @@
   <meta name="twitter:image"      content="https://lilanazemian.com/assets/og-image.png" />
   <link rel="stylesheet" href="assets/style.css" />
   <style>
-    .catalogue-header {
-      padding: 72px 40px 48px;
-      border-bottom: 0.5px solid var(--border);
-    }
-    .catalogue-header p {
-      font-size: 13px;
-      color: var(--mid);
-      letter-spacing: 0.04em;
-    }
-
     /* ── Drawer: dropdown below button, top-right area ── */
     .drawer {
       top: 140px !important;
@@ -130,6 +120,18 @@
       border-bottom: 0.5px solid var(--sage);
       padding-bottom: 1px;
     }
+
+    /* Cards float over the Damavand background with frosted glass */
+    .catalogue-card {
+      background: rgba(245, 242, 237, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 8px;
+      overflow: hidden;
+      padding-bottom: 16px;
+    }
+    .card-img { border-radius: 0; }
+    .card-info { padding: 14px 16px 0; }
   </style>
 </head>
 <body>
@@ -138,7 +140,7 @@
   <div class="drawer" id="drawer">
     <nav>
       <a href="index.html">Home</a>
-      <a href="catalogue.html" class="active">Catalogue</a>
+      <a href="catalogue.html" class="active">Catalogues</a>
       <a href="music.html">Music</a>
     </nav>
   </div>
@@ -173,10 +175,6 @@
   </button>
 
   <main class="page">
-    <div class="catalogue-header">
-      <p>Selected exhibitions and projects, 2016–2025</p>
-    </div>
-
     <div class="catalogue-grid">
 
       <a class="catalogue-card" href="catalogues/bride-has-gone.pdf" target="_blank" rel="noopener">
@@ -267,6 +265,171 @@
       <line x1="17" y1="9" x2="23" y2="15"/>
     </svg>
   </button>
+
+  <!-- Damavand animated background -->
+  <script>
+  (function () {
+    var canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;';
+    document.body.insertBefore(canvas, document.body.firstChild);
+    var c = canvas.getContext('2d');
+    var W, H;
+
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Cloud objects — three layers: high wispy, mid fluffy, low mist
+    var clouds = [];
+    function initClouds() {
+      clouds = [];
+      for (var i = 0; i < 7; i++) clouds.push({ x: Math.random() * W * 1.4 - W * 0.2, y: H * (0.06 + Math.random() * 0.14), w: 90 + Math.random() * 160, h: 10 + Math.random() * 16, spd: 0.06 + Math.random() * 0.10, op: 0.12 + Math.random() * 0.18, t: 'wisp' });
+      for (var i = 0; i < 9; i++) clouds.push({ x: Math.random() * W * 1.4 - W * 0.2, y: H * (0.18 + Math.random() * 0.22), w: 65 + Math.random() * 130, h: 28 + Math.random() * 38, spd: 0.10 + Math.random() * 0.16, op: 0.16 + Math.random() * 0.20, t: 'fluffy' });
+      for (var i = 0; i < 6; i++) clouds.push({ x: Math.random() * W * 1.2 - W * 0.1, y: H * (0.52 + Math.random() * 0.10), w: 170 + Math.random() * 220, h: 22 + Math.random() * 28, spd: 0.04 + Math.random() * 0.06, op: 0.08 + Math.random() * 0.10, t: 'mist' });
+    }
+    initClouds();
+    window.addEventListener('resize', initClouds);
+
+    function drawCloud(cl) {
+      c.save(); c.globalAlpha = cl.op;
+      if (cl.t === 'wisp') {
+        var g = c.createRadialGradient(cl.x, cl.y, 0, cl.x, cl.y, cl.w * 0.5);
+        g.addColorStop(0, 'rgba(238,218,232,0.9)'); g.addColorStop(1, 'rgba(238,218,232,0)');
+        c.fillStyle = g; c.beginPath();
+        c.ellipse(cl.x, cl.y, cl.w * 0.5, cl.h * 0.5, 0, 0, Math.PI * 2); c.fill();
+      } else if (cl.t === 'fluffy') {
+        var puffs = [[0,0,cl.w*0.38,cl.h*0.52],[-cl.w*0.28,cl.h*0.1,cl.w*0.30,cl.h*0.40],[cl.w*0.24,cl.h*0.08,cl.w*0.27,cl.h*0.36],[-cl.w*0.1,-cl.h*0.12,cl.w*0.21,cl.h*0.30],[cl.w*0.08,-cl.h*0.06,cl.w*0.19,cl.h*0.27]];
+        puffs.forEach(function(p) {
+          var g = c.createRadialGradient(cl.x+p[0], cl.y+p[1], 0, cl.x+p[0], cl.y+p[1], Math.max(p[2],p[3]));
+          g.addColorStop(0, 'rgba(238,222,234,0.88)'); g.addColorStop(1, 'rgba(238,222,234,0)');
+          c.fillStyle = g; c.beginPath();
+          c.ellipse(cl.x+p[0], cl.y+p[1], p[2], p[3], 0, 0, Math.PI*2); c.fill();
+        });
+      } else {
+        var g = c.createRadialGradient(cl.x, cl.y, 0, cl.x, cl.y, cl.w * 0.5);
+        g.addColorStop(0, 'rgba(215,195,210,0.75)'); g.addColorStop(1, 'rgba(215,195,210,0)');
+        c.fillStyle = g; c.beginPath();
+        c.ellipse(cl.x, cl.y, cl.w * 0.5, cl.h * 0.5, 0, 0, Math.PI * 2); c.fill();
+      }
+      c.restore();
+    }
+
+    function drawSky() {
+      var g = c.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0,    '#191228');
+      g.addColorStop(0.18, '#2b1e46');
+      g.addColorStop(0.38, '#573466');
+      g.addColorStop(0.58, '#9a638a');
+      g.addColorStop(0.74, '#c4909e');
+      g.addColorStop(0.88, '#d8b4a8');
+      g.addColorStop(1,    '#e8ccc0');
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+    }
+
+    function drawMountain() {
+      var px = W * 0.50, py = H * 0.30;
+      var baseY = H * 0.70;
+
+      // Distant ridgeline
+      c.fillStyle = 'rgba(55, 38, 72, 0.38)';
+      c.beginPath(); c.moveTo(-10, H);
+      c.lineTo(-10, H * 0.62);
+      c.bezierCurveTo(W*0.12, H*0.56, W*0.32, H*0.60, W*0.50, H*0.58);
+      c.bezierCurveTo(W*0.68, H*0.56, W*0.86, H*0.61, W+10, H*0.65);
+      c.lineTo(W+10, H); c.closePath(); c.fill();
+
+      // Main Damavand cone
+      var mg = c.createLinearGradient(px, py, px, baseY);
+      mg.addColorStop(0,   'rgba(32, 24, 48, 0.96)');
+      mg.addColorStop(0.4, 'rgba(40, 32, 58, 0.93)');
+      mg.addColorStop(1,   'rgba(36, 28, 52, 0.88)');
+      c.fillStyle = mg;
+      c.beginPath(); c.moveTo(-W*0.15, H);
+      c.lineTo(-W*0.15, baseY);
+      c.bezierCurveTo(W*0.14, baseY-18, px-W*0.07, py+H*0.16, px, py);
+      c.bezierCurveTo(px+W*0.07, py+H*0.16, W*0.86, baseY-18, W*1.15, baseY);
+      c.lineTo(W*1.15, H); c.closePath(); c.fill();
+
+      // Snow cap
+      var sg = c.createLinearGradient(px, py, px, py + H*0.11);
+      sg.addColorStop(0,   'rgba(242, 234, 248, 0.97)');
+      sg.addColorStop(0.5, 'rgba(222, 212, 234, 0.72)');
+      sg.addColorStop(1,   'rgba(200, 190, 218, 0)');
+      c.fillStyle = sg;
+      c.beginPath();
+      c.moveTo(px - W*0.022, py + H*0.065);
+      c.bezierCurveTo(px - W*0.016, py + H*0.028, px - W*0.007, py + H*0.004, px, py);
+      c.bezierCurveTo(px + W*0.007, py + H*0.004, px + W*0.016, py + H*0.028, px + W*0.022, py + H*0.065);
+      c.bezierCurveTo(px + W*0.012, py + H*0.100, px + W*0.004, py + H*0.108, px, py + H*0.105);
+      c.bezierCurveTo(px - W*0.004, py + H*0.108, px - W*0.012, py + H*0.100, px - W*0.022, py + H*0.065);
+      c.closePath(); c.fill();
+
+      // Base mist / atmospheric haze
+      var hg = c.createLinearGradient(0, H*0.60, 0, H*0.75);
+      hg.addColorStop(0, 'rgba(175, 148, 168, 0)');
+      hg.addColorStop(1, 'rgba(195, 168, 185, 0.28)');
+      c.fillStyle = hg; c.fillRect(0, H*0.60, W, H*0.15);
+    }
+
+    function frame() {
+      c.clearRect(0, 0, W, H);
+      drawSky();
+      // High clouds behind mountain
+      clouds.filter(function(cl) { return cl.y < H * 0.42; }).forEach(function(cl) {
+        cl.x += cl.spd; if (cl.x > W + 300) cl.x = -300;
+        drawCloud(cl);
+      });
+      drawMountain();
+      // Low clouds / mist in front of mountain
+      clouds.filter(function(cl) { return cl.y >= H * 0.42; }).forEach(function(cl) {
+        cl.x += cl.spd; if (cl.x > W + 350) cl.x = -350;
+        drawCloud(cl);
+      });
+      requestAnimationFrame(frame);
+    }
+    frame();
+  }());
+  </script>
+
+  <!-- Cosmos snow -->
+  <script>
+  (function () {
+    var COLORS = ['#d8b0d5','#c090c4','#e0c8de','#b860b0','#f0dcea','#f5f2ed','#cda8ca'];
+    var N = 24;
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden;';
+    document.body.appendChild(wrap);
+
+    function flowerSVG(sz, fill) {
+      var p8  = [0,45,90,135,180,225,270,315];
+      var p16 = [22.5,67.5,112.5,157.5,202.5,247.5,292.5,337.5];
+      var s = '<svg viewBox="-24 -24 48 48" width="'+sz+'" height="'+sz+'" xmlns="http://www.w3.org/2000/svg">';
+      p8.forEach(function(r){ s += '<path d="M0,0 C-4.5,-7 -4.5,-16 0,-21 C4.5,-16 4.5,-7 0,0Z" fill="'+fill+'" transform="rotate('+r+')"/>'; });
+      p16.forEach(function(r){ s += '<path d="M0,0 C-3,-5 -3,-11 0,-14 C3,-11 3,-5 0,0Z" fill="'+fill+'" opacity="0.72" transform="rotate('+r+')"/>'; });
+      s += '<circle r="5" fill="#f5d060" opacity="0.85"/></svg>';
+      return s;
+    }
+
+    for (var i = 0; i < N; i++) {
+      var size  = 22 + Math.random() * 32;
+      var x     = Math.random() * 106 - 3;
+      var dur   = 50000 + Math.random() * 45000;
+      var delay = -(0.12 + Math.random() * 0.88) * dur;
+      var fill  = COLORS[Math.floor(Math.random() * COLORS.length)];
+      var drift = (Math.random() - 0.5) * 180;
+      var spin  = (Math.random() - 0.5) * 600;
+      var opk   = 0.55 + Math.random() * 0.3;
+      var el = document.createElement('div');
+      el.style.cssText = 'position:absolute;top:0;left:' + x + '%;';
+      el.innerHTML = flowerSVG(Math.round(size), fill);
+      wrap.appendChild(el);
+      el.animate([
+        { transform: 'translateY(-'+(size+10)+'px) translateX(0px) rotate(0deg)',     opacity: opk },
+        { transform: 'translateY(110vh) translateX('+drift+'px) rotate('+spin+'deg)', opacity: 0   }
+      ], { duration: dur, delay: delay, iterations: Infinity, easing: 'linear' });
+    }
+  }());
+  </script>
 
   <!-- Isfahan music box — melody variation, link tinkle, mute -->
   <script>
