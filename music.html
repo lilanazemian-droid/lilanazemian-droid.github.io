@@ -459,7 +459,7 @@
 
     if (!_muted) {
       start();
-      ['click','touchstart','keydown'].forEach(function(ev) {
+      ['mousemove','pointerdown','touchstart','keydown','scroll'].forEach(function(ev) {
         document.addEventListener(ev, start, { once: true, passive: true });
       });
     }
