@@ -57,12 +57,11 @@ a { color: inherit; text-decoration: none; }
 
 .nav-logo {
   font-family: var(--serif);
-  font-size: 15px;
-  letter-spacing: 0.09em;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   color: #f5f2ed;
-  background: rgba(90, 110, 70, 0.82);
-  padding: 6px 14px;
-  border-radius: 4px;
+  background: none;
 }
 .nav-logo a { color: inherit; }
 
