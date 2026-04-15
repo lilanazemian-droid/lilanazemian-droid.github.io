@@ -827,12 +827,18 @@
     var dragging = false, _wasDrag = false;
     var startX, startY, startLeft, startTop;
 
+    function _setPos(l, t) {
+      btn.style.setProperty('right',     'auto',  'important');
+      btn.style.setProperty('transform', 'none',  'important');
+      btn.style.setProperty('left',      l + 'px','important');
+      btn.style.setProperty('top',       t + 'px','important');
+    }
+
     try {
       var saved = JSON.parse(localStorage.getItem(KEY));
       if (saved) {
-        btn.style.right = 'auto'; btn.style.transform = 'none';
-        btn.style.left = Math.min(saved.x, window.innerWidth  - btn.offsetWidth)  + 'px';
-        btn.style.top  = Math.min(saved.y, window.innerHeight - btn.offsetHeight) + 'px';
+        _setPos(Math.min(saved.x, window.innerWidth  - btn.offsetWidth),
+                Math.min(saved.y, window.innerHeight - btn.offsetHeight));
       }
     } catch (e) {}
 
@@ -841,8 +847,7 @@
       var r = btn.getBoundingClientRect();
       startX = e.clientX; startY = e.clientY;
       startLeft = r.left; startTop = r.top;
-      btn.style.right = 'auto'; btn.style.transform = 'none';
-      btn.style.left = startLeft + 'px'; btn.style.top = startTop + 'px';
+      _setPos(startLeft, startTop);
       dragging = true; _wasDrag = false;
       try { btn.setPointerCapture(e.pointerId); } catch(ex) {}
     }
@@ -852,13 +857,13 @@
       if (Math.abs(dx) > 8 || Math.abs(dy) > 8) _wasDrag = true;
       if (_wasDrag) {
         e.preventDefault();
-        btn.style.left = Math.max(0, Math.min(window.innerWidth  - btn.offsetWidth,  startLeft + dx)) + 'px';
-        btn.style.top  = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, startTop  + dy)) + 'px';
+        _setPos(Math.max(0, Math.min(window.innerWidth  - btn.offsetWidth,  startLeft + dx)),
+                Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, startTop  + dy)));
       }
     }
     function onEnd() {
       if (!dragging) return; dragging = false;
-      if (_wasDrag) { try { localStorage.setItem(KEY, JSON.stringify({ x: parseFloat(btn.style.left), y: parseFloat(btn.style.top) })); } catch (ex) {} }
+      if (_wasDrag) { try { localStorage.setItem(KEY, JSON.stringify({ x: parseFloat(btn.style.getPropertyValue('left')), y: parseFloat(btn.style.getPropertyValue('top')) })); } catch (ex) {} }
     }
 
     btn.addEventListener('click', function (e) {
