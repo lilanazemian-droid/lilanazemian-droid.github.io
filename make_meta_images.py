@@ -11,11 +11,12 @@ COSMOS = os.path.join(BASE, "assets", "cosmos-flower-clipart-lg.png")
 ASSETS = os.path.join(BASE, "assets")
 
 # ── colours (from site palette) ──────────────────────────────────────────────
-DARK_GREEN  = (57,  71, 34,  255)   # deep moss
-MID_GREEN   = (90,  110, 70, 255)   # bio-box green
-CREAM       = (245, 242, 237, 255)
-LILAC       = (216, 176, 213, 255)
-GOLD        = (245, 208, 96,  255)
+DARK_GREEN   = (57,  71,  34,  255)   # deep moss
+MID_GREEN    = (90,  110, 70,  255)   # bio-box green
+CREAM        = (245, 242, 237, 255)
+LILAC        = (216, 176, 213, 255)
+COSMOS_PINK  = (220, 88,  138, 255)   # warm pink of the cosmos in the .mov
+GOLD         = (245, 208, 96,  255)
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 def load_cosmos(size):
@@ -42,7 +43,7 @@ def make_favicon_32():
     size = 32
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     cosmos = load_cosmos(size)
-    cosmos = tint(cosmos, LILAC)
+    cosmos = tint(cosmos, COSMOS_PINK)
     canvas.paste(cosmos, (0, 0), cosmos)
     out = os.path.join(ASSETS, "favicon-32.png")
     canvas.save(out, "PNG")

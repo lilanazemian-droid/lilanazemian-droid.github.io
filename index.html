@@ -375,230 +375,251 @@
   }());
   </script>
 
-  <!-- Isfahan music box -->
+  <!-- Mute button -->
+  <button id="mute-btn" class="mute-btn" onclick="window._toggleSiteMusic && window._toggleSiteMusic()" aria-label="Toggle music">
+    <svg class="icon-sound" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+    <svg class="icon-muted" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <line x1="23" y1="9" x2="17" y2="15"/>
+      <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+  </button>
+
+  <!-- Isfahan music box — melody variation, link tinkle, mute -->
   <script>
   (function () {
     var AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
 
-    // Isfahan dastgah rooted on D5 (one octave higher — lighter, more ethereal).
-    // The defining interval is the koron (neutral/half-flat) 3rd.
-    var D4  = 587.33,   // D5
-        E4  = 659.26,   // E5
-        Fk4 = D4 * Math.pow(2, 350 / 1200),  // ≈ 719 Hz  (koron third)
-        G4  = 784.00,   // G5
-        A4  = 880.00,   // A5
-        Bb4 = 932.33;   // Bb5
+    var D4  = 587.33, E4 = 659.26,
+        Fk4 = D4 * Math.pow(2, 350 / 1200),
+        G4  = 784.00, A4 = 880.00, Bb4 = 932.33;
 
-    // Monophonic melody — {f: Hz, d: ms}  |  f = 0 → rest
-    var mel = [
-      // phrase 1 — classic Isfahan descent: 5th → koron-3rd → tonic
-      {f:A4,  d:560}, {f:G4,  d:390}, {f:Fk4, d:760},
-      {f:E4,  d:390}, {f:D4,  d:1200},{f:0,   d:420},
+    // Tempo varies ±12% each visit so the music never feels identical
+    var tempo = 0.88 + Math.random() * 0.24;
+    function ms(x) { return x * tempo; }
 
-      // phrase 2 — rise through the scale, Bb colour note, back down
-      {f:D4,  d:280}, {f:E4,  d:280}, {f:Fk4, d:430},
-      {f:G4,  d:560}, {f:A4,  d:390}, {f:Bb4, d:610},
-      {f:A4,  d:390}, {f:G4,  d:390}, {f:Fk4, d:560},
-      {f:E4,  d:390}, {f:D4,  d:1500},{f:0,   d:500},
-
-      // phrase 3 — ornamental turn on koron-3rd, settle to tonic
-      {f:E4,  d:200}, {f:Fk4, d:250}, {f:E4,  d:200},
-      {f:D4,  d:250}, {f:E4,  d:200}, {f:Fk4, d:610},
-      {f:G4,  d:760}, {f:Fk4, d:430}, {f:E4,  d:390},
-      {f:D4,  d:2000},{f:0,   d:1200}
+    // Three melody variants — one chosen at random each page load
+    var mel1 = [  // classic Isfahan descent
+      {f:A4,d:ms(560)},{f:G4,d:ms(390)},{f:Fk4,d:ms(760)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(1200)},{f:0,d:ms(420)},
+      {f:D4,d:ms(280)},{f:E4,d:ms(280)},{f:Fk4,d:ms(430)},
+      {f:G4,d:ms(560)},{f:A4,d:ms(390)},{f:Bb4,d:ms(610)},
+      {f:A4,d:ms(390)},{f:G4,d:ms(390)},{f:Fk4,d:ms(560)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(1500)},{f:0,d:ms(500)},
+      {f:E4,d:ms(200)},{f:Fk4,d:ms(250)},{f:E4,d:ms(200)},
+      {f:D4,d:ms(250)},{f:E4,d:ms(200)},{f:Fk4,d:ms(610)},
+      {f:G4,d:ms(760)},{f:Fk4,d:ms(430)},{f:E4,d:ms(390)},
+      {f:D4,d:ms(2000)},{f:0,d:ms(1200)}
     ];
+    var mel2 = [  // dawn — rising gesture, then descends
+      {f:D4,d:ms(560)},{f:E4,d:ms(390)},{f:Fk4,d:ms(760)},
+      {f:G4,d:ms(390)},{f:A4,d:ms(1200)},{f:0,d:ms(420)},
+      {f:A4,d:ms(280)},{f:G4,d:ms(280)},{f:Fk4,d:ms(430)},
+      {f:E4,d:ms(560)},{f:D4,d:ms(390)},{f:E4,d:ms(610)},
+      {f:Fk4,d:ms(390)},{f:E4,d:ms(390)},{f:D4,d:ms(560)},{f:0,d:ms(500)},
+      {f:G4,d:ms(200)},{f:Fk4,d:ms(250)},{f:G4,d:ms(200)},
+      {f:A4,d:ms(250)},{f:G4,d:ms(200)},{f:Fk4,d:ms(610)},
+      {f:E4,d:ms(760)},{f:D4,d:ms(2000)},{f:0,d:ms(1200)}
+    ];
+    var mel3 = [  // nocturnal — opens on the Bb colour note
+      {f:Bb4,d:ms(760)},{f:A4,d:ms(560)},
+      {f:G4,d:ms(390)},{f:Fk4,d:ms(760)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(1500)},{f:0,d:ms(500)},
+      {f:D4,d:ms(280)},{f:Fk4,d:ms(430)},{f:A4,d:ms(560)},
+      {f:Bb4,d:ms(610)},{f:A4,d:ms(390)},{f:G4,d:ms(390)},
+      {f:Fk4,d:ms(560)},{f:E4,d:ms(390)},{f:D4,d:ms(1200)},{f:0,d:ms(420)},
+      {f:E4,d:ms(200)},{f:Fk4,d:ms(200)},{f:E4,d:ms(200)},
+      {f:D4,d:ms(200)},{f:E4,d:ms(430)},
+      {f:Fk4,d:ms(390)},{f:G4,d:ms(560)},{f:Fk4,d:ms(430)},
+      {f:E4,d:ms(390)},{f:D4,d:ms(2200)},{f:0,d:ms(1200)}
+    ];
+    var mel = [mel1, mel2, mel3][Math.floor(Math.random() * 3)];
 
-    // Music box tine synthesis:
-    // A real tine produces inharmonic overtones (Euler-Bernoulli beam).
-    // Each partial has its own decay — the bright overtones vanish fast,
-    // leaving just the warm fundamental. That contrast IS the music box sound.
-    // [frequency multiplier, peak amplitude, decay time in seconds]
     var PARTIALS = [
-      [1.000, 1.00, 2.4],   // fundamental — long, warm decay
-      [2.756, 0.32, 0.50],  // 1st inharmonic overtone — the "ting", fades fast
-      [5.404, 0.10, 0.18],  // 2nd overtone — very short, adds initial brightness
+      [1.000, 1.00, 2.4],
+      [2.756, 0.32, 0.50],
+      [5.404, 0.10, 0.18],
     ];
 
     var ctx, masterGain, nextTime = 0, idx = 0, ready = false;
+    var _muted = localStorage.getItem('siteMuted') === 'true';
 
-    // Short reverb (used for wind)
     function makeReverb() {
-      var conv = ctx.createConvolver(),
-          n    = ctx.sampleRate * 3,
+      var conv = ctx.createConvolver(), n = ctx.sampleRate * 3,
           buf  = ctx.createBuffer(2, n, ctx.sampleRate);
       for (var c = 0; c < 2; c++) {
         var d = buf.getChannelData(c);
         for (var i = 0; i < n; i++)
           d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2.1);
       }
-      conv.buffer = buf;
-      return conv;
+      conv.buffer = buf; return conv;
     }
 
-    // Hall reverb for melody: 5 s decay, 22 ms pre-delay, gentle slope
     function makeHallReverb() {
-      var conv = ctx.createConvolver(),
-          n    = ctx.sampleRate * 5,
+      var conv = ctx.createConvolver(), n = ctx.sampleRate * 5,
           buf  = ctx.createBuffer(2, n, ctx.sampleRate);
       var pre = Math.floor(ctx.sampleRate * 0.022);
       for (var c = 0; c < 2; c++) {
         var d = buf.getChannelData(c);
         for (var i = 0; i < n; i++) {
           if (i < pre) { d[i] = 0; continue; }
-          var t = (i - pre) / (n - pre);
-          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 1.2);
+          var tt = (i - pre) / (n - pre);
+          d[i] = (Math.random() * 2 - 1) * Math.pow(1 - tt, 1.2);
         }
       }
-      conv.buffer = buf;
-      return conv;
+      conv.buffer = buf; return conv;
     }
 
-    // Strike a single tine: sum of inharmonic partials, each decaying independently
     function strikeTine(freq, startTime) {
       PARTIALS.forEach(function(p) {
-        var mult = p[0], amp = p[1], decay = p[2];
-        var osc = ctx.createOscillator();
-        var ng  = ctx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.value = freq * mult;
-
+        var osc = ctx.createOscillator(), ng = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq * p[0];
         ng.gain.setValueAtTime(0, startTime);
-        ng.gain.linearRampToValueAtTime(amp, startTime + 0.003); // 3 ms attack (instant ping)
-        ng.gain.exponentialRampToValueAtTime(0.0001, startTime + decay);
-
-        osc.connect(ng);
-        ng.connect(masterGain);
-        osc.start(startTime);
-        osc.stop(startTime + decay + 0.05);
+        ng.gain.linearRampToValueAtTime(p[1], startTime + 0.003);
+        ng.gain.exponentialRampToValueAtTime(0.0001, startTime + p[2]);
+        osc.connect(ng); ng.connect(masterGain);
+        osc.start(startTime); osc.stop(startTime + p[2] + 0.05);
       });
     }
 
-    // Scheduler: look 2 s ahead so background-tab throttling never gaps
     function tick() {
       while (nextTime < ctx.currentTime + 2.0) {
         var note = mel[idx], dur = note.d / 1000;
-
         if (note.f > 0) strikeTine(note.f, nextTime);
-
         nextTime += dur;
         idx = (idx + 1) % mel.length;
-        if (idx === 0) nextTime += 2.5;   // breath between loops
+        if (idx === 0) nextTime += 2.5;
       }
       setTimeout(tick, 80);
     }
 
     function startWind() {
-      // Wind: broad lowpass-shaped noise (no narrow bandpass = no water resonance).
-      // Key: low Q filters keep the spectrum diffuse; very slow LFOs for natural swell.
-      var len = ctx.sampleRate * 8;
-      var buf = ctx.createBuffer(2, len, ctx.sampleRate);
+      var len = ctx.sampleRate * 8, buf = ctx.createBuffer(2, len, ctx.sampleRate);
       for (var c = 0; c < 2; c++) {
         var d = buf.getChannelData(c);
         for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
       }
       var noise = ctx.createBufferSource();
       noise.buffer = buf; noise.loop = true;
-
-      // Remove sub-bass thud
       var hp = ctx.createBiquadFilter();
       hp.type = 'highpass'; hp.frequency.value = 80; hp.Q.value = 0.4;
-
-      // Cut harsh highs — broad, gentle slope
       var lp = ctx.createBiquadFilter();
       lp.type = 'lowpass'; lp.frequency.value = 650; lp.Q.value = 0.5;
-
       var wGain = ctx.createGain();
       wGain.gain.setValueAtTime(0, ctx.currentTime);
       wGain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 2.5);
-
-      // Very slow breath swell (one cycle every ~20 s)
       var aLFO = ctx.createOscillator(), aLFOG = ctx.createGain();
       aLFO.frequency.value = 0.05; aLFOG.gain.value = 0.018;
       aLFO.connect(aLFOG); aLFOG.connect(wGain.gain); aLFO.start();
-
-      // Slowly drifting lowpass cutoff — wind character shifts (~40 s cycle)
       var fLFO = ctx.createOscillator(), fLFOG = ctx.createGain();
       fLFO.frequency.value = 0.024; fLFOG.gain.value = 180;
       fLFO.connect(fLFOG); fLFOG.connect(lp.frequency); fLFO.start();
-
-      var wRevConv = makeReverb();
-      var wRevG    = ctx.createGain(); wRevG.gain.value = 0.85;
-
+      var wRevConv = makeReverb(), wRevG = ctx.createGain();
+      wRevG.gain.value = 0.85;
       noise.connect(hp); hp.connect(lp); lp.connect(wGain);
       wGain.connect(ctx.destination);
       wGain.connect(wRevConv); wRevConv.connect(wRevG); wRevG.connect(ctx.destination);
       noise.start();
     }
 
+    // High-octave tinkle on link hover (two octaves above melody)
+    var tinkleBusy = false;
+    function tinkle() {
+      if (!ready || !ctx || _muted || tinkleBusy) return;
+      tinkleBusy = true;
+      setTimeout(function() { tinkleBusy = false; }, 120);
+      var TNOTES = [D4*4, E4*4, Fk4*4, G4*4, A4*4];
+      var f = TNOTES[Math.floor(Math.random() * TNOTES.length)]
+              * Math.pow(2, (Math.random() * 14 - 7) / 1200);
+      [[1.0, 0.08, 0.36], [2.756, 0.025, 0.12]].forEach(function(p) {
+        var osc = ctx.createOscillator(), g = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.value = f * p[0];
+        g.gain.setValueAtTime(0, ctx.currentTime);
+        g.gain.linearRampToValueAtTime(p[1], ctx.currentTime + 0.003);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + p[2]);
+        osc.connect(g); g.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + p[2] + 0.05);
+      });
+    }
+
     function setup() {
       if (ready) return;
       ready = true;
-
       var rev = makeHallReverb(), rvg = ctx.createGain();
-      rvg.gain.value = 0.54;  // hall reverb — spacious tail
-
+      rvg.gain.value = 0.54;
       masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0, ctx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(0.36, ctx.currentTime + 0.8); // fast fade-in
-
+      masterGain.gain.linearRampToValueAtTime(0.36, ctx.currentTime + 0.8);
       masterGain.connect(ctx.destination);
-      masterGain.connect(rev);
-      rev.connect(rvg);
-      rvg.connect(ctx.destination);
-
+      masterGain.connect(rev); rev.connect(rvg); rvg.connect(ctx.destination);
       nextTime = ctx.currentTime + 0.5;
       tick();
       startWind();
+      // Attach link hover tinkle
+      document.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('mouseenter', tinkle);
+      });
     }
 
     function start() {
+      if (_muted) return;
       if (!ctx) ctx = new AC();
-      ctx.resume().then(function () {
-        if (ctx.state === 'running') setup();
+      ctx.resume().then(function() { if (ctx.state === 'running') setup(); });
+    }
+
+    // Global mute toggle (called by the mute button on any page)
+    window._toggleSiteMusic = function() {
+      _muted = !_muted;
+      localStorage.setItem('siteMuted', _muted ? 'true' : 'false');
+      var btn = document.getElementById('mute-btn');
+      if (btn) btn.classList.toggle('muted', _muted);
+      if (_muted) {
+        if (ctx) ctx.suspend();
+      } else {
+        if (!ctx || ctx.state === 'suspended') start();
+        else if (ctx) ctx.resume();
+      }
+    };
+
+    // Apply saved mute state to button on load
+    (function() {
+      var btn = document.getElementById('mute-btn');
+      if (btn && _muted) btn.classList.add('muted');
+    }());
+
+    if (!_muted) {
+      start();
+      ['click','touchstart','keydown'].forEach(function(ev) {
+        document.addEventListener(ev, start, { once: true, passive: true });
       });
     }
 
-    // Attempt autoplay; fall back to first user gesture (browser policy)
-    start();
-    ['click', 'touchstart', 'keydown'].forEach(function (ev) {
-      document.addEventListener(ev, start, { once: true, passive: true });
-    });
-
-    // ── Scroll splurge ──
-    // On each scroll, fire a short nature-inspired burst of music-box notes
-    // drawn from the upper Isfahan octave (bird calls, water drops, rustles).
-    var D5  = D4 * 2,  E5  = E4 * 2,
-        Fk5 = Fk4 * 2, G5  = G4 * 2,
-        A5  = A4 * 2,  Bb5 = Bb4 * 2;
-
-    // Each pattern: [[frequency, delay_ms], ...]
+    // Scroll splurge
+    var D5=D4*2, E5=E4*2, Fk5=Fk4*2, G5=G4*2, A5=A4*2, Bb5=Bb4*2;
     var splurges = [
-      [[A5, 0],   [G5, 80],  [Fk5, 170]],                    // descending bird call
-      [[D5, 0],   [Fk5, 70], [A5,  150]],                    // rising chirp
-      [[G5, 0],   [E5, 65],  [Fk5, 130], [D5,  220]],        // water drips
-      [[Fk5, 0],  [E5, 55],  [Fk5, 110], [G5,  190]],        // trill
-      [[A5, 0],   [G5, 90],  [E5,  190]],                    // falling droplets
-      [[E5, 0],   [Fk5, 60], [G5,  120], [A5,  200]],        // rustling ascent
-      [[Bb5, 0],  [A5, 75],  [G5,  160]],                    // bright cascade
-      [[D5, 0],   [E5, 50],  [Fk5,  95], [E5,  150]],        // flutter
+      [[A5,0],[G5,80],[Fk5,170]],
+      [[D5,0],[Fk5,70],[A5,150]],
+      [[G5,0],[E5,65],[Fk5,130],[D5,220]],
+      [[Fk5,0],[E5,55],[Fk5,110],[G5,190]],
+      [[A5,0],[G5,90],[E5,190]],
+      [[E5,0],[Fk5,60],[G5,120],[A5,200]],
+      [[Bb5,0],[A5,75],[G5,160]],
+      [[D5,0],[E5,50],[Fk5,95],[E5,150]],
     ];
-
     var scrollBusy = false;
-    window.addEventListener('scroll', function () {
-      if (scrollBusy || !ready || !ctx) return;
+    window.addEventListener('scroll', function() {
+      if (scrollBusy || !ready || !ctx || _muted) return;
       scrollBusy = true;
-      setTimeout(function () { scrollBusy = false; }, 380);
-
-      var pattern = splurges[Math.floor(Math.random() * splurges.length)];
-      var now     = ctx.currentTime;
-      // Tiny random pitch nudge (±12 cents) so repeated triggers feel organic
-      var bend    = Math.pow(2, (Math.random() * 24 - 12) / 1200);
-
-      pattern.forEach(function (n) {
-        strikeTine(n[0] * bend, now + n[1] / 1000);
-      });
+      setTimeout(function() { scrollBusy = false; }, 380);
+      var pat = splurges[Math.floor(Math.random() * splurges.length)];
+      var now = ctx.currentTime;
+      var bend = Math.pow(2, (Math.random() * 24 - 12) / 1200);
+      pat.forEach(function(n) { strikeTine(n[0]*bend, now+n[1]/1000); });
     }, { passive: true });
   }());
   </script>
