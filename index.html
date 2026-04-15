@@ -415,7 +415,8 @@
     for (var i = 0; i < N; i++) spawn();
 
     function spawn() {
-      var size  = 22 + Math.random() * 32;
+      var _mob  = window.innerWidth <= 768;
+      var size  = _mob ? (10 + Math.random() * 14) : (22 + Math.random() * 32);
       var x     = Math.random() * 106 - 3;
       var dur   = 50000 + Math.random() * 45000;
       // Pre-scatter: all flowers start mid-fall, none fade in from zero
