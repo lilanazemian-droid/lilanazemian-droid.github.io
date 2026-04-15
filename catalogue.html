@@ -13,7 +13,7 @@
   <meta name="twitter:card"       content="summary_large_image" />
   <meta name="twitter:image"      content="https://lilanazemian.com/assets/og-image.png" />
   <link rel="stylesheet" href="assets/style.css" />
-  <style>
+  <style id="page-style">
     /* ── Drawer: dropdown below button, top-right area ── */
     .drawer {
       top: 140px !important;
@@ -277,7 +277,7 @@
   </button>
 
   <!-- Damavand animated background -->
-  <script>
+  <script data-page>
   (function () {
     var canvas = document.createElement('canvas');
     canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;';
@@ -479,9 +479,14 @@
         cl.x += cl.spd; if (cl.x > W + 350) cl.x = -350;
         drawCloud(cl);
       });
-      requestAnimationFrame(frame);
+      _raf = requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
+    var _raf = requestAnimationFrame(frame);
+    window._pageCleanup = function () {
+      cancelAnimationFrame(_raf);
+      window.removeEventListener('resize', resize);
+      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+    };
   }());
   </script>
 
@@ -698,8 +703,13 @@
       nextTime = ctx.currentTime + 0.5;
       tick();
       startWind();
-      document.querySelectorAll('a').forEach(function(a) {
-        a.addEventListener('mouseenter', tinkle);
+      var _tt = null;
+      document.addEventListener('mouseover', function(e) {
+        var a = e.target.closest('a');
+        if (a && a !== _tt) { _tt = a; tinkle(); }
+      });
+      document.addEventListener('mouseout', function(e) {
+        if (e.target.closest('a') === _tt) _tt = null;
       });
     }
 
@@ -852,5 +862,6 @@
     document.addEventListener('touchend', onEnd);
   }());
   </script>
+  <script src="assets/nav.js"></script>
 </body>
 </html>

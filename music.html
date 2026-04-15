@@ -13,7 +13,7 @@
   <meta name="twitter:card"       content="summary_large_image" />
   <meta name="twitter:image"      content="https://lilanazemian.com/assets/og-image.png" />
   <link rel="stylesheet" href="assets/style.css" />
-  <style>
+  <style id="page-style">
     body { background: #1a1814; }
 
     /* Nav transparent on music page */
@@ -417,8 +417,13 @@
       nextTime = ctx.currentTime + 0.5;
       tick();
       startWind();
-      document.querySelectorAll('a').forEach(function(a) {
-        a.addEventListener('mouseenter', tinkle);
+      var _tt = null;
+      document.addEventListener('mouseover', function(e) {
+        var a = e.target.closest('a');
+        if (a && a !== _tt) { _tt = a; tinkle(); }
+      });
+      document.addEventListener('mouseout', function(e) {
+        if (e.target.closest('a') === _tt) _tt = null;
       });
     }
 
@@ -620,5 +625,6 @@
     document.addEventListener('touchend', onEnd);
   }());
   </script>
+  <script src="assets/nav.js"></script>
 </body>
 </html>
