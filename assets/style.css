@@ -92,6 +92,25 @@ a { color: inherit; text-decoration: none; }
   gap: 5px;
   border-radius: 4px;
 }
+
+/* ─── COSMOS BUTTON GLOW ─── */
+.menu-btn .btn-float {
+  animation: cosmos-glow 3.4s ease-in-out infinite;
+}
+@keyframes cosmos-glow {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0  6px rgba(216,176,213,0.55))
+      drop-shadow(0 0 14px rgba(216,176,213,0.28));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 10px rgba(216,176,213,0.90))
+      drop-shadow(0 0 26px rgba(216,176,213,0.50))
+      drop-shadow(0 0 44px rgba(180,140,210,0.22));
+  }
+}
+
 .menu-btn .bar {
   display: block;
   height: 1.5px;
