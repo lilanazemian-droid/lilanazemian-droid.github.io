@@ -798,7 +798,17 @@
     }
 
     function openDrawer() {
-      document.getElementById('drawer').classList.add('open');
+      var btn    = document.querySelector('.menu-btn');
+      var drawer = document.getElementById('drawer');
+      if (btn) {
+        var r  = btn.getBoundingClientRect();
+        var dw = drawer.offsetWidth || 180;
+        var left = Math.max(10, Math.min(r.left, window.innerWidth - dw - 10));
+        drawer.style.setProperty('top',   (r.bottom + 8) + 'px', 'important');
+        drawer.style.setProperty('left',  left + 'px',            'important');
+        drawer.style.setProperty('right', 'auto',                 'important');
+      }
+      drawer.classList.add('open');
       document.getElementById('overlay').classList.add('open');
     }
     function closeDrawer() {
