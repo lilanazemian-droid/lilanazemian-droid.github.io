@@ -656,10 +656,10 @@
     }
 
     function start() {
-      if (_muted || !ctx) return;
+      if (_muted || !ctx || ctx.state === 'closed') return;
       // iOS Safari needs a silent buffer played during the gesture to truly unlock
       try { var b=ctx.createBuffer(1,1,ctx.sampleRate),s=ctx.createBufferSource(); s.buffer=b; s.connect(ctx.destination); s.start(0); } catch(ex){}
-      ctx.resume().then(setup);
+      ctx.resume().then(setup).catch(function(){});
     }
 
     // Global mute toggle (called by the mute button on any page)
@@ -671,8 +671,7 @@
       if (_muted) {
         if (ctx) ctx.suspend();
       } else {
-        if (!ctx || ctx.state === 'suspended') start();
-        else if (ctx) ctx.resume();
+        start();
       }
     };
 
@@ -686,15 +685,13 @@
       if (btn && _muted) btn.classList.add('muted');
     }());
 
-    if (!_muted) {
-      start();
-      // pointerdown fires on first press (before click/mouseup) — desktop
-      // touchstart fires on first finger contact — mobile
-      // keydown covers keyboard users
-      ['pointerdown','touchstart','touchend','keydown'].forEach(function(ev) {
-        document.addEventListener(ev, start, { once: true, passive: true });
-      });
-    }
+    // Keep retrying on every gesture until audio is running — don't use
+    // { once: true } because the first gesture may coincide with a mute
+    // click or resolve before setup() has a chance to run.
+    function _tryStart() { if (!ready) start(); }
+    ['pointerdown', 'touchstart', 'keydown'].forEach(function(ev) {
+      document.addEventListener(ev, _tryStart, { passive: true });
+    });
 
     // Scroll splurge
     var D5=D4*2, E5=E4*2, Fk5=Fk4*2, G5=G4*2, A5=A4*2, Bb5=Bb4*2;

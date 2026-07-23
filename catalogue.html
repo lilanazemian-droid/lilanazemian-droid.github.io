@@ -717,9 +717,9 @@
     }
 
     function start() {
-      if (_muted || !ctx) return;
+      if (_muted || !ctx || ctx.state === 'closed') return;
       try { var b=ctx.createBuffer(1,1,ctx.sampleRate),s=ctx.createBufferSource(); s.buffer=b; s.connect(ctx.destination); s.start(0); } catch(ex){}
-      ctx.resume().then(setup);
+      ctx.resume().then(setup).catch(function(){});
     }
 
     window._toggleSiteMusic = function() {
@@ -730,8 +730,7 @@
       if (_muted) {
         if (ctx) ctx.suspend();
       } else {
-        if (!ctx || ctx.state === 'suspended') start();
-        else if (ctx) ctx.resume();
+        start();
       }
     };
 
@@ -739,12 +738,10 @@
     window._pauseSiteMusic  = function() { if (ctx) ctx.suspend(); };
     window._resumeSiteMusic = function() { if (ctx && !_muted) ctx.resume(); };
 
-    if (!_muted) {
-      start();
-      ['pointerdown','touchstart','touchend','keydown'].forEach(function(ev) {
-        document.addEventListener(ev, start, { once: true, passive: true });
-      });
-    }
+    function _tryStart() { if (!ready) start(); }
+    ['pointerdown', 'touchstart', 'keydown'].forEach(function(ev) {
+      document.addEventListener(ev, _tryStart, { passive: true });
+    });
 
     var D5=D4*2, E5=E4*2, Fk5=Fk4*2, G5=G4*2, A5=A4*2, Bb5=Bb4*2;
     var splurges = [
